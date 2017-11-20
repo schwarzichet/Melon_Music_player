@@ -6,6 +6,7 @@ import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.example.dfz.myapplication.Model.Song;
 
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 
 public class SongLoader {
     private static final String BASE_SELECTION = MediaStore.Audio.AudioColumns.IS_MUSIC + "=1" + " AND " + MediaStore.Audio.AudioColumns.TITLE + " != ''";
+    private static final String TAG = "songloader";
 
     public static ArrayList<Song> loadSongs(final Context context) {
         Cursor cursor = makeSongCursor(context, null, null, "TITLE ASC");
@@ -26,6 +28,7 @@ public class SongLoader {
 
     @NonNull
     public static ArrayList<Song> getSongs(@Nullable final Cursor cursor) {
+        Log.d(TAG, "getSongs: ");
         ArrayList<Song> songs = new ArrayList<>();
         if (cursor != null && cursor.moveToFirst()) {
             do {
@@ -49,6 +52,7 @@ public class SongLoader {
         if (cursor != null) {
             cursor.close();
         }
+        Log.d(TAG, "getSong: ");
         return song;
     }
 
