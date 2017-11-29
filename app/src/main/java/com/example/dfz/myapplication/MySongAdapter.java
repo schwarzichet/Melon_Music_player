@@ -7,11 +7,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,6 +45,7 @@ public class MySongAdapter extends RecyclerView.Adapter<MySongAdapter.ViewHolder
         private TextView mSongTitleTextView;
         private TextView mArtistTextView;
         private ImageView mAlbumImageView;
+        //private ImageButton mMoreButton;
 
         public ViewHolder(CardView v) {
             super(v);
@@ -54,6 +58,7 @@ public class MySongAdapter extends RecyclerView.Adapter<MySongAdapter.ViewHolder
             mSongTitleTextView = (TextView)v.findViewById(R.id.SongTitle);
             mArtistTextView = (TextView)v.findViewById(R.id.ArtistName);
             mAlbumImageView = (ImageView)v.findViewById(R.id.albumImage);
+            //mMoreButton = (ImageButton)v.findViewById(R.id.buttonMore);
         }
     }
 
@@ -110,7 +115,12 @@ public class MySongAdapter extends RecyclerView.Adapter<MySongAdapter.ViewHolder
             }
         });
 
-
+//        holder.mMoreButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
     }
 
 
@@ -131,6 +141,5 @@ public class MySongAdapter extends RecyclerView.Adapter<MySongAdapter.ViewHolder
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.onItemClickListener = listener;
     }
-
 
 }

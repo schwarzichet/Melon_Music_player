@@ -11,6 +11,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.example.dfz.myapplication.MUtils.SongUtil;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -28,7 +30,7 @@ public class PlayerActivity extends AppCompatActivity {
     private static final String TAG = "PLAYERACTIVITY";
     private String songUri;
     private SimpleExoPlayer player;
-    private SimpleExoPlayerView playerView;
+//    private SimpleExoPlayerView playerView;
     private ImageView albumImageView;
 
     private long playbackPosition;
@@ -46,14 +48,25 @@ public class PlayerActivity extends AppCompatActivity {
         }else {
             Log.d(TAG, "onCreate: no actionbar");
         }
-        setContentView(R.layout.activity_player);
+//        setContentView(R.layout.activity_player);
+
+        setContentView(R.layout.player_layout);
+
         Intent intent = getIntent();
         songUri = "file://" + intent.getStringExtra("SongUri");
 
-        // Capture the layout's TextView and set the string as its text
-        playerView = (SimpleExoPlayerView) findViewById(R.id.audio_view);
+        albumImageView = findViewById(R.id.audio_view);
+        int albumId = intent.getIntExtra("albumId", 0);
+        Uri imageUri = SongUtil.getAlbumArt(albumId);
+        Glide.with(this).load(imageUri).into(albumImageView);
 
-        albumImageView = findViewById(R.id.exo_artwork);
+        // Capture the layout's TextView and set the string as its text
+//        playerView = (SimpleExoPlayerView) findViewById(R.id.audio_view);
+
+//        albumImageView = findViewById(R.id.exo_artwork);
+
+
+
 //        albumImageView.setOnTouchListener(new View.OnTouchListener() {
 //            @Override
 //            public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -78,7 +91,7 @@ public class PlayerActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        hideSystemUi();
+//        hideSystemUi();
         if ((Util.SDK_INT <= 23 || player == null)) {
             initializePlayer();
         }
@@ -100,21 +113,21 @@ public class PlayerActivity extends AppCompatActivity {
         }
     }
 
-    @SuppressLint("InlinedApi")
-    private void hideSystemUi() {
-        playerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-    }
+//    @SuppressLint("InlinedApi")
+//    private void hideSystemUi() {
+//        playerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+//                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+//                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+//    }
 
     private void initializePlayer() {
         player = ExoPlayerFactory.newSimpleInstance(
                 new DefaultRenderersFactory(this),
                 new DefaultTrackSelector(), new DefaultLoadControl());
 
-        playerView.setPlayer(player);
+//        playerView.setPlayer(player);
 
         player.setPlayWhenReady(playWhenReady);
         player.seekTo(currentWindow, playbackPosition);
@@ -123,7 +136,7 @@ public class PlayerActivity extends AppCompatActivity {
         Log.d(TAG, "initializePlayer: uri = " + uri);
         MediaSource mediaSource = buildMediaSource(uri);
         player.prepare(mediaSource, true, false);
-        playerView.setUseArtwork(true);
+//        playerView.setUseArtwork(true);
     }
 
     private void releasePlayer() {

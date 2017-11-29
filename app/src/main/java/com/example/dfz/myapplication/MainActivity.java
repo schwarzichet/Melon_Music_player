@@ -7,6 +7,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.view.menu.MenuBuilder;
+import android.support.v7.view.menu.MenuPopupHelper;
 import android.view.LayoutInflater;
 
 import android.support.v4.app.FragmentActivity;
@@ -14,20 +16,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.example.dfz.myapplication.Model.Song;
 
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.Inflater;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements android.support.v7.widget.PopupMenu.OnMenuItemClickListener {
     private RecyclerView mRecyclerView;
     private MySongAdapter mAdapter;
     private ArrayList<Song> songs = new ArrayList<>();
@@ -76,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(MainActivity.this, PlayerActivity.class);
                 intent.putExtra("SongUri", songs.get(position).getData());
+                intent.putExtra("albumId", songs.get(position).getAlbumID());
                 startActivity(intent);
 
             }
@@ -149,6 +155,41 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
+    public void showPopup(View v) {
+        android.support.v7.widget.PopupMenu popup = new android.support.v7.widget.PopupMenu(this, v);
+        //popup.setOptionalIconsVisible(true);
+        popup.setOnMenuItemClickListener(this);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.more_operations_menu, popup.getMenu());
+        setIconEnable(popup, true);
+        popup.show();
+    }
 
+    private void setIconEnable(android.support.v7.widget.PopupMenu menu, boolean enable)
+    {
+        try
+        {
+            Class<?> clazz = Class.forName("com.android.internal.view.menu.MenuBuilder");
+            Method m = clazz.getDeclaredMethod("setOptionalIconsVisible", boolean.class);
+            m.setAccessible(true);
+            m.invoke(menu, enable);
+
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.play_next:;
+                return true;
+            case R.id.add_to_playlist:;
+                return true;
+            default:
+                return false;
+        }
+    }
 
 }
