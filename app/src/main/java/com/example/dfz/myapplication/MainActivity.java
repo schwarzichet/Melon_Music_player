@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private MySongAdapter mAdapter;
     private ArrayList<Song> songs = new ArrayList<>();
-    private FragmentActivity lowerBar;
+    private int nowPosition = 0;
 
     private String TAG = "mainactivity";
 
@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onItemLongClick(View view, int position) {
+                nowPosition = position;
                 Toast.makeText(MainActivity.this, "long click " + songs.get(position) + " item", Toast.LENGTH_SHORT).show();
                 //PlaylistCoverFragment playlistCover = new PlaylistCoverFragment();
                 Bundle bundle = new Bundle();
@@ -124,6 +125,30 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    public void nextSong(View view){
+
+        Log.d(TAG, "nextSong: ");
+        int position = nowPosition+1;
+        nowPosition++;
+        Toast.makeText(MainActivity.this, "long click " + songs.get(position) + " item", Toast.LENGTH_SHORT).show();
+        //PlaylistCoverFragment playlistCover = new PlaylistCoverFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("title", songs.get(position).getTitle());
+        bundle.putString("artist", songs.get(position).getArtist());
+        bundle.putInt("albumId", songs.get(position).getAlbumID());
+        bundle.putString("data", songs.get(position).getData());
+
+        LowerBar lowerBar = new LowerBar();
+        lowerBar.setArguments(bundle);
+        android.app.FragmentManager fragmentManager=getFragmentManager();
+        android.app.FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.lower_bar, lowerBar);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
 
 
 }

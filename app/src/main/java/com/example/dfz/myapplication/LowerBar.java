@@ -1,12 +1,14 @@
 package com.example.dfz.myapplication;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -53,7 +55,6 @@ public class LowerBar extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // 拉伸该 Fragment 的布局
 
         View lowerbar = inflater.inflate(R.layout.lowerbar_fragment, container, false);
         TextView title_view = (TextView) lowerbar.findViewById(R.id.lowerbar_title);
@@ -63,6 +64,23 @@ public class LowerBar extends Fragment {
         Glide.with(this).load(imageUri).into(album_view);
         artist_view.setText(artist);
         title_view.setText(title);
+
+        ImageButton playOrPause = lowerbar.findViewById(R.id.lowerbar_playbutton);
+        playOrPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                player.setPlayWhenReady(!player.getPlayWhenReady());
+            }
+
+        });
+
+//        ImageButton nextSong = lowerbar.findViewById(R.id.lowerbar_nextbutton);
+//        nextSong.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
 
         return lowerbar;
     }
@@ -131,5 +149,8 @@ public class LowerBar extends Fragment {
                 new FileDataSourceFactory(),
                 new DefaultExtractorsFactory(), null, null);
     }
+
+
+
 
 }
