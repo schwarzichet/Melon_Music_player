@@ -1,12 +1,15 @@
 package com.example.dfz.myapplication;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -26,6 +29,7 @@ public class PlayerActivity extends AppCompatActivity {
     private String songUri;
     private SimpleExoPlayer player;
     private SimpleExoPlayerView playerView;
+    private ImageView albumImageView;
 
     private long playbackPosition;
     private int currentWindow;
@@ -34,12 +38,32 @@ public class PlayerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeButtonEnabled(false);      // Disable the button
+            actionBar.setDisplayHomeAsUpEnabled(false); // Remove the left caret
+            actionBar.setDisplayShowHomeEnabled(false); // Remove the icon
+        }else {
+            Log.d(TAG, "onCreate: no actionbar");
+        }
         setContentView(R.layout.activity_player);
         Intent intent = getIntent();
         songUri = "file://" + intent.getStringExtra("SongUri");
 
         // Capture the layout's TextView and set the string as its text
         playerView = (SimpleExoPlayerView) findViewById(R.id.audio_view);
+
+        albumImageView = findViewById(R.id.exo_artwork);
+//        albumImageView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                if (motionEvent.getAction()==MotionEvent.)
+//                return false;
+//            }
+//        });
+
+
+
 
     }
 
@@ -99,6 +123,7 @@ public class PlayerActivity extends AppCompatActivity {
         Log.d(TAG, "initializePlayer: uri = " + uri);
         MediaSource mediaSource = buildMediaSource(uri);
         player.prepare(mediaSource, true, false);
+        playerView.setUseArtwork(true);
     }
 
     private void releasePlayer() {

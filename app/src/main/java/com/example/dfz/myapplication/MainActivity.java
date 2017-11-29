@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 bundle.putString("title", songs.get(position).getTitle());
                 bundle.putString("artist", songs.get(position).getArtist());
                 bundle.putInt("albumId", songs.get(position).getAlbumID());
+                bundle.putString("data", songs.get(position).getData());
 
                 LowerBar lowerBar = new LowerBar();
                 lowerBar.setArguments(bundle);
