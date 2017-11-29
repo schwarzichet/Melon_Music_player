@@ -51,8 +51,8 @@ public class MySongAdapter extends RecyclerView.Adapter<MySongAdapter.ViewHolder
                     Log.d(TAG, "Element " + getAdapterPosition() + " clicked.");
                 }
             });
-            mSongTitleTextView = (TextView) v.findViewById(R.id.SongTitle);
-            mArtistTextView = (TextView) v.findViewById(R.id.ArtistName);
+            mSongTitleTextView = (TextView)v.findViewById(R.id.SongTitle);
+            mArtistTextView = (TextView)v.findViewById(R.id.ArtistName);
             mAlbumImageView = (ImageView)v.findViewById(R.id.albumImage);
         }
     }

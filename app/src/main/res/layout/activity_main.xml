@@ -22,21 +22,28 @@
 
     <include layout="@layout/content_main" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_media_play" />
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom|end"-->
+        <!--android:layout_margin="@dimen/fab_margin"-->
+        <!--app:srcCompat="@android:drawable/ic_media_play" />-->
 
-    <android.support.v7.widget.AppCompatSeekBar
-        android:layout_weight="0"
-        android:id="@+id/seekBar"
+    <!--<android.support.v7.widget.AppCompatSeekBar-->
+        <!--android:layout_weight="0"-->
+        <!--android:id="@+id/seekBar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom" />-->
+
+    <RelativeLayout
+        android:id="@+id/lower_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom" />
+        android:layout_gravity="bottom">
 
+    </RelativeLayout>
 
 
 </android.support.design.widget.CoordinatorLayout>

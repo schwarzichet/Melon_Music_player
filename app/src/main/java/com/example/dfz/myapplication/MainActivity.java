@@ -4,6 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.view.LayoutInflater;
 
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +21,11 @@ import android.widget.Toast;
 
 import com.example.dfz.myapplication.Model.Song;
 
+import java.io.FileDescriptor;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.zip.Inflater;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
@@ -37,14 +45,14 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
 
@@ -69,11 +77,25 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, PlayerActivity.class);
                 intent.putExtra("SongUri", songs.get(position).getData());
                 startActivity(intent);
+
             }
 
             @Override
             public void onItemLongClick(View view, int position) {
                 Toast.makeText(MainActivity.this, "long click " + songs.get(position) + " item", Toast.LENGTH_SHORT).show();
+                //PlaylistCoverFragment playlistCover = new PlaylistCoverFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("title", songs.get(position).getTitle());
+                bundle.putString("artist", songs.get(position).getArtist());
+                bundle.putInt("albumId", songs.get(position).getAlbumID());
+
+                LowerBar lowerBar = new LowerBar();
+                lowerBar.setArguments(bundle);
+                android.app.FragmentManager fragmentManager=getFragmentManager();
+                android.app.FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.lower_bar, lowerBar);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
 
