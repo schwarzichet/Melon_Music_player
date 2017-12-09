@@ -41,6 +41,7 @@ public class LowerBar extends Fragment {
     private long playbackPosition;
     private int currentWindow;
     private boolean playWhenReady = true;
+    private boolean isPlaying = false;
 
     //private MySongAdapter()
     @Override
@@ -65,11 +66,17 @@ public class LowerBar extends Fragment {
         artist_view.setText(artist);
         title_view.setText(title);
 
-        ImageButton playOrPause = lowerbar.findViewById(R.id.lowerbar_playbutton);
+        final ImageButton playOrPause = lowerbar.findViewById(R.id.lowerbar_playbutton);
         playOrPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 player.setPlayWhenReady(!player.getPlayWhenReady());
+
+                if(isPlaying)
+                    playOrPause.setImageResource(R.drawable.ic_pause);
+                else
+                    playOrPause.setImageResource(R.drawable.ic_play_arrow);
+                isPlaying = !isPlaying;
             }
 
         });

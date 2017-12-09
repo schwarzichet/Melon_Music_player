@@ -1,73 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/lower_bar_layout"
     android:layout_width="match_parent"
     android:layout_height="72dp"
     android:layout_gravity="bottom"
-    android:background="@android:color/white">
+    android:background="@drawable/border_shadow"
+    android:elevation="1dp"
+    android:clickable="true"
+    android:focusable="true">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:paddingLeft="10dp">
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
 
         <ImageView
             android:id="@+id/lowerbar_image"
             android:layout_width="60dp"
             android:layout_height="60dp"
-
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:scaleType="centerCrop"
-            android:contentDescription="AlbumArt" />
+            android:contentDescription="@string/albumart" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/lowerbar_image"
+            android:layout_toEndOf="@+id/lowerbar_image"
+            android:layout_marginStart="10dp"
             android:orientation="vertical"
-            android:paddingLeft="15dp">
+            android:gravity="center_vertical"
+            tools:ignore="RelativeOverlap">
 
             <TextView
                 android:layout_gravity="center_vertical"
                 android:id="@+id/lowerbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingBottom="3dp"
                 android:singleLine="true"
-                android:text="song" />
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:text="@string/song" />
 
             <TextView
                 android:layout_gravity="center_vertical"
                 android:id="@+id/lowerbar_artist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="5dp"
-                android:text="singer" />
+                android:singleLine="true"
+                android:textSize="14sp"
+                android:textColor="@android:color/black"
+                android:text="@string/singer" />
+
         </LinearLayout>
-        <LinearLayout
-            android:layout_alignParentRight="true"
+
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp">
+
             <ImageButton
-                android:layout_toLeftOf="@id/lowerbar_nextbutton"
                 android:id="@+id/lowerbar_playbutton"
-                android:src="@android:drawable/ic_media_play"
+                android:src="@drawable/ic_pause"
+                android:background="@android:color/transparent"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_gravity="end|center"/>
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/lowerbar_nextbutton"
+                android:layout_marginEnd="5dp"/>
+
             <ImageButton
-                android:onClick="nextSong"
-                android:layout_alignParentRight="true"
                 android:id="@+id/lowerbar_nextbutton"
-                android:src="@android:drawable/ic_media_next"
+                android:src="@drawable/ic_skip_next"
+                android:background="@android:color/transparent"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_gravity="center"/>
-        </LinearLayout>
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:onClick="nextSong" />
+
+        </RelativeLayout>
 
 
     </RelativeLayout>

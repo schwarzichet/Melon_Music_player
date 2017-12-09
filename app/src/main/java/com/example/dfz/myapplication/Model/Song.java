@@ -25,6 +25,8 @@ public class Song {
     final private int year;
     final private long duration;
 
+
+
     public Song(int id, String title, int trackNumber, int year, long duration, String data,
                 String artist, int artistID, String album, int albumID) {
         this._id = id;
@@ -44,6 +46,10 @@ public class Song {
         return "Song{" +
                 "title='" + title + '\'' +
                 '}';
+    }
+
+    public long getDuration() {
+        return duration;
     }
 
     public Uri getAlbumArt() {

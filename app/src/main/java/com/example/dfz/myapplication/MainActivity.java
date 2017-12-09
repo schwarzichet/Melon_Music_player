@@ -82,6 +82,9 @@ public class MainActivity extends AppCompatActivity implements android.support.v
                 Intent intent = new Intent(MainActivity.this, PlayerActivity.class);
                 intent.putExtra("SongUri", songs.get(position).getData());
                 intent.putExtra("albumId", songs.get(position).getAlbumID());
+                intent.putExtra("title", songs.get(position).getTitle());
+                intent.putExtra("artist", songs.get(position).getArtist());
+                intent.putExtra("Duration", songs.get(position).getDuration());
                 startActivity(intent);
 
             }
