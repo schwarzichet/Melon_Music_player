@@ -102,13 +102,13 @@ public class MusicService extends Service {
                     new DefaultRenderersFactory(MusicService.this),
                     new DefaultTrackSelector(), new DefaultLoadControl());
         }
-        if (!songUri.equals("")){
+        if (!songUri.equals("")) {
             setSong(songUri);
         }
 
     }
 
-    public void setSong(String songUri){
+    public void setSong(String songUri) {
         player.setPlayWhenReady(playWhenReady);
         player.seekTo(currentWindow, playbackPosition);
         this.songUri = "file://" + songUri;
@@ -181,6 +181,33 @@ public class MusicService extends Service {
     public long getCurrentPosition() {
         return player.getCurrentPosition();
     }
+
+    public void start() {
+        if (player != null) {
+            player.setPlayWhenReady(true);
+            if (!this.playWhenReady) {
+                this.playWhenReady = true;
+            }
+        }
+
+    }
+
+    public void pause() {
+        if (player!=null){
+            player.setPlayWhenReady(false);
+            if (this.playWhenReady) {
+                this.playWhenReady = false;
+            }
+        }
+    }
+
+    public void stop(){
+        if (player!=null){
+            player.stop();
+        }
+    }
+
+
 
 
 }

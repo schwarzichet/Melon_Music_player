@@ -73,6 +73,7 @@ public class PlayerActivity extends AppCompatActivity {
         Intent intentService = new Intent(this, MusicService.class);
         bindService(intentService, mConnection, Context.BIND_AUTO_CREATE);
 
+
         long currentMs = 0;
         while (mBound){
             currentMs = myService.getCurrentPosition();

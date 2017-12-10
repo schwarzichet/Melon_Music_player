@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     @Override
     protected void onStop() {
         super.onStop();
-        if (mBound){
+        if (mBound) {
             unbindService(mConnection);
             mBound = false;
         }
@@ -80,11 +80,8 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         Log.d(TAG, "onCreate: startService");
 
 
-        
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
 
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
@@ -95,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
 
         songs = SongLoader.loadSongs(MainActivity.this);
 
-        Log.d(TAG, "onCreate: song number is "+songs.size());
+        Log.d(TAG, "onCreate: song number is " + songs.size());
         mAdapter = new MySongAdapter(MainActivity.this, songs);
         mAdapter.setOnItemClickListener(new MySongAdapter.OnItemClickListener() {
             @Override
@@ -140,7 +137,6 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         mRecyclerView.setAdapter(mAdapter);
 
 
-
     }
 
     @Override
@@ -166,10 +162,10 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     }
 
 
-    public void nextSong(View view){
+    public void nextSong(View view) {
 
         Log.d(TAG, "nextSong: ");
-        int position = nowPosition+1;
+        int position = nowPosition + 1;
         nowPosition++;
         Toast.makeText(MainActivity.this, "long click " + songs.get(position) + " item", Toast.LENGTH_SHORT).show();
         //PlaylistCoverFragment playlistCover = new PlaylistCoverFragment();
@@ -181,8 +177,8 @@ public class MainActivity extends AppCompatActivity implements android.support.v
 
         LowerBar lowerBar = new LowerBar();
         lowerBar.setArguments(bundle);
-        android.app.FragmentManager fragmentManager=getFragmentManager();
-        android.app.FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+        android.app.FragmentManager fragmentManager = getFragmentManager();
+        android.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.lower_bar, lowerBar);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
@@ -198,17 +194,14 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         popup.show();
     }
 
-    private void setIconEnable(android.support.v7.widget.PopupMenu menu, boolean enable)
-    {
-        try
-        {
+    private void setIconEnable(android.support.v7.widget.PopupMenu menu, boolean enable) {
+        try {
             Class<?> clazz = Class.forName("com.android.internal.view.menu.MenuBuilder");
             Method m = clazz.getDeclaredMethod("setOptionalIconsVisible", boolean.class);
             m.setAccessible(true);
             m.invoke(menu, enable);
 
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -259,7 +252,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         startActivity(intent);
     }
 
-    private void setSong(String uri){
+    private void setSong(String uri) {
 //        Intent intent = new Intent(this, MusicService.class);
 //        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 //        Log.d(TAG, "setSong: again set bind");

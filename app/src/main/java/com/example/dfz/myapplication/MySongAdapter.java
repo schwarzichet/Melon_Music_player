@@ -55,9 +55,9 @@ public class MySongAdapter extends RecyclerView.Adapter<MySongAdapter.ViewHolder
                     Log.d(TAG, "Element " + getAdapterPosition() + " clicked.");
                 }
             });
-            mSongTitleTextView = (TextView)v.findViewById(R.id.SongTitle);
-            mArtistTextView = (TextView)v.findViewById(R.id.ArtistName);
-            mAlbumImageView = (ImageView)v.findViewById(R.id.albumImage);
+            mSongTitleTextView = (TextView) v.findViewById(R.id.SongTitle);
+            mArtistTextView = (TextView) v.findViewById(R.id.ArtistName);
+            mAlbumImageView = (ImageView) v.findViewById(R.id.albumImage);
             //mMoreButton = (ImageButton)v.findViewById(R.id.buttonMore);
         }
     }
@@ -91,7 +91,7 @@ public class MySongAdapter extends RecyclerView.Adapter<MySongAdapter.ViewHolder
 
 
         Uri imageUri = mDataset.get(position).getAlbumArt();
-        Log.d(TAG, "onBindViewHolder: "+ imageUri);
+        Log.d(TAG, "onBindViewHolder: " + imageUri);
         Glide.with(activity).load(imageUri).into(holder.mAlbumImageView);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

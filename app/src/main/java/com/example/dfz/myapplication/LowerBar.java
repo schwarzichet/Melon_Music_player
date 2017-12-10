@@ -55,8 +55,6 @@ public class LowerBar extends Fragment {
 //        getActivity().startService(intent);
 
 
-
-
     }
 
     @Override
@@ -107,7 +105,7 @@ public class LowerBar extends Fragment {
 
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (getActivity() instanceof LowerBarFragmentTouchListener){
+                if (getActivity() instanceof LowerBarFragmentTouchListener) {
                     return mDetector.onTouchEvent(motionEvent);
                 }
                 return false;
@@ -121,8 +119,8 @@ public class LowerBar extends Fragment {
 
         @Override
         public boolean onDown(MotionEvent event) {
-            Log.d(DEBUG_TAG,"onDown: " + event.toString());
-            if (getActivity() instanceof LowerBarFragmentTouchListener){
+            Log.d(DEBUG_TAG, "onDown: " + event.toString());
+            if (getActivity() instanceof LowerBarFragmentTouchListener) {
                 ((LowerBarFragmentTouchListener) getActivity()).goToPlayer();
             }
             return true;
@@ -132,9 +130,8 @@ public class LowerBar extends Fragment {
         public boolean onFling(MotionEvent e1, MotionEvent e2,
                                float velocityX, float velocityY) {
             Log.d(DEBUG_TAG, "onFling: " + e1.toString() + e2.toString());
-            if(velocityY > 0)
-            {
-                if (getActivity() instanceof LowerBarFragmentTouchListener){
+            if (velocityY > 0) {
+                if (getActivity() instanceof LowerBarFragmentTouchListener) {
                     ((LowerBarFragmentTouchListener) getActivity()).goToPlayer();
                 }
             }
@@ -142,7 +139,7 @@ public class LowerBar extends Fragment {
         }
     }
 
-    public interface LowerBarFragmentTouchListener{
+    public interface LowerBarFragmentTouchListener {
         void goToPlayer();
     }
 
