@@ -72,7 +72,12 @@ public class PlayerActivity extends AppCompatActivity {
 
         Intent intentService = new Intent(this, MusicService.class);
         bindService(intentService, mConnection, Context.BIND_AUTO_CREATE);
-        long currentMs = myService.getCurrentPosition();
+
+        long currentMs = 0;
+        while (mBound){
+            currentMs = myService.getCurrentPosition();
+        }
+
 
         Uri imageUri = SongUtil.getAlbumArt(albumId);
         Glide.with(this).load(imageUri).into(albumImageView);
@@ -165,6 +170,8 @@ public class PlayerActivity extends AppCompatActivity {
         public void onServiceDisconnected(ComponentName arg0) {
             mBound = false;
         }
+
+
     };
 
 

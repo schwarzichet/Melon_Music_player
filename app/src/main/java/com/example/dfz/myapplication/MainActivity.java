@@ -1,6 +1,7 @@
 package com.example.dfz.myapplication;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -50,10 +51,36 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     boolean mBound = false;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        Intent intent2 = new Intent(this, MusicService.class);
+        bindService(intent2, mConnection, Context.BIND_AUTO_CREATE);
+        Log.d(TAG, "onCreate: bind service");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mBound){
+            unbindService(mConnection);
+            mBound = false;
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        Intent intent = new Intent(this, MusicService.class);
+        intent.putExtra("songUri", "");
+        intent.putExtra("duration", 0);
+        startService(intent);
+        Log.d(TAG, "onCreate: startService");
+
+
+        
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -90,6 +117,10 @@ public class MainActivity extends AppCompatActivity implements android.support.v
                 fragmentTransaction.replace(R.id.lower_bar, lowerBar);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
+
+
+                MainActivity.this.setSong(s.getData());
+
             }
 
             @Override
@@ -102,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
 //                intent.putExtra("artist", songs.get(position).getArtist());
 //                intent.putExtra("Duration", songs.get(position).getDuration());
 //                startActivity(intent);
+
             }
         });
 
@@ -109,10 +141,6 @@ public class MainActivity extends AppCompatActivity implements android.support.v
 
 
 
-        Intent intent = new Intent(this, MusicService.class);
-        intent.putExtra("songUri", "");
-        intent.putExtra("duration", 0);
-        startService(intent);
     }
 
     @Override
@@ -188,9 +216,9 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.play_next:;
+            case R.id.play_next:
                 return true;
-            case R.id.add_to_playlist:;
+            case R.id.add_to_playlist:
                 return true;
             default:
                 return false;
@@ -204,8 +232,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         stopService(destroyIntent);
     }
 
-    private ServiceConnection mConnection = new ServiceConnection() {
-
+    public ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
@@ -230,5 +257,13 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         intent.putExtra("duration", songs.get(nowPosition).getDuration());
         intent.putExtra("currentTimeMs", currentTimeMs);
         startActivity(intent);
+    }
+
+    private void setSong(String uri){
+//        Intent intent = new Intent(this, MusicService.class);
+//        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+//        Log.d(TAG, "setSong: again set bind");
+        myService.setSong(uri);
+//        unbindService(mConnection);
     }
 }

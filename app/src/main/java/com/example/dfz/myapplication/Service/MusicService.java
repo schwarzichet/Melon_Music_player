@@ -102,6 +102,9 @@ public class MusicService extends Service {
                     new DefaultRenderersFactory(MusicService.this),
                     new DefaultTrackSelector(), new DefaultLoadControl());
         }
+        if (!songUri.equals("")){
+            setSong(songUri);
+        }
 
     }
 

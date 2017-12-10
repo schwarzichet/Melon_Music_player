@@ -49,9 +49,10 @@ public class LowerBar extends Fragment {
         songUri = getArguments().getString("songUri");
         duration = getArguments().getLong("duration");
 
-        Intent intent = new Intent(getActivity(), MusicService.class);
-        intent.putExtra("songUri", songUri);
-        intent.putExtra("duration", duration);
+//        Intent intent = new Intent(getActivity(), MusicService.class);
+//        intent.putExtra("songUri", songUri);
+//        intent.putExtra("duration", duration);
+//        getActivity().startService(intent);
 
 
 
