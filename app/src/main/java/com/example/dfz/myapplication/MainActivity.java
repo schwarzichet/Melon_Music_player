@@ -33,11 +33,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.Inflater;
 
-public class MainActivity extends AppCompatActivity implements android.support.v7.widget.PopupMenu.OnMenuItemClickListener {
+public class MainActivity extends AppCompatActivity implements android.support.v7.widget.PopupMenu.OnMenuItemClickListener, LowerBar.LowerBarFragmentTouchListener {
     private RecyclerView mRecyclerView;
     private MySongAdapter mAdapter;
     private ArrayList<Song> songs = new ArrayList<>();
     private int nowPosition = 0;
+
+    private long currentTimeMs = 0;
 
     private String TAG = "mainactivity";
 
@@ -54,10 +56,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
 
 
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-
-
         mRecyclerView.setHasFixedSize(true);
-
 
 
         Log.d(TAG, "onCreate: i am goimg to load songs");
@@ -69,37 +68,35 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         mAdapter.setOnItemClickListener(new MySongAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Intent intent = new Intent(MainActivity.this, PlayerActivity.class);
-                intent.putExtra("SongUri", songs.get(position).getData());
-                intent.putExtra("albumId", songs.get(position).getAlbumID());
-                intent.putExtra("title", songs.get(position).getTitle());
-                intent.putExtra("artist", songs.get(position).getArtist());
-                intent.putExtra("Duration", songs.get(position).getDuration());
-                startActivity(intent);
-
-
-            }
-
-            @Override
-            public void onItemLongClick(View view, int position) {
                 nowPosition = position;
-                Toast.makeText(MainActivity.this, "long click " + songs.get(position) + " item", Toast.LENGTH_SHORT).show();
-                //PlaylistCoverFragment playlistCover = new PlaylistCoverFragment();
+
                 Bundle bundle = new Bundle();
                 Song s = songs.get(position);
                 bundle.putString("title", s.getTitle());
                 bundle.putString("artist", s.getArtist());
                 bundle.putInt("albumId", s.getAlbumID());
-                bundle.putString("data", s.getData());
+                bundle.putString("songUri", s.getData());
                 bundle.putLong("duration", s.getDuration());
 
                 LowerBar lowerBar = new LowerBar();
                 lowerBar.setArguments(bundle);
-                android.app.FragmentManager fragmentManager=getFragmentManager();
-                android.app.FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+                android.app.FragmentManager fragmentManager = getFragmentManager();
+                android.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.lower_bar, lowerBar);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+//                Intent intent = new Intent(MainActivity.this, PlayerActivity.class);
+//                intent.putExtra("SongUri", songs.get(position).getData());
+//                intent.putExtra("albumId", songs.get(position).getAlbumID());
+//                intent.putExtra("title", songs.get(position).getTitle());
+//                intent.putExtra("artist", songs.get(position).getArtist());
+//                intent.putExtra("Duration", songs.get(position).getDuration());
+//                startActivity(intent);
             }
         });
 
@@ -193,5 +190,16 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         super.onDestroy();
         Intent destroyIntent = new Intent(this, MusicService.class);
         stopService(destroyIntent);
+    }
+
+    @Override
+    public void goToPlayer() {
+        Intent intent = new Intent(MainActivity.this, PlayerActivity.class);
+        intent.putExtra("albumId", songs.get(nowPosition).getAlbumID());
+        intent.putExtra("title", songs.get(nowPosition).getTitle());
+        intent.putExtra("artist", songs.get(nowPosition).getArtist());
+        intent.putExtra("duration", songs.get(nowPosition).getDuration());
+        intent.putExtra("currentTimeMs", currentTimeMs);
+        startActivity(intent);
     }
 }

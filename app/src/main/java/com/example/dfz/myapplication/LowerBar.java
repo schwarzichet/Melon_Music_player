@@ -4,7 +4,11 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.view.GestureDetectorCompat;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -27,9 +31,9 @@ public class LowerBar extends Fragment {
     private int albumId;
     private String songUri;
     private long duration;
+    private long currentMs;
 
-
-
+    private GestureDetectorCompat mDetector;
 
     @Override
     public void onCreate(Bundle saveInstanceState) {
@@ -37,7 +41,7 @@ public class LowerBar extends Fragment {
         title = getArguments().getString("title");
         artist = getArguments().getString("artist");
         albumId = getArguments().getInt("albumId");
-        songUri = getArguments().getString("data");
+        songUri = getArguments().getString("songUri");
         duration = getArguments().getLong("duration");
 
         Intent intent = new Intent(getActivity(), MusicService.class);
@@ -85,13 +89,55 @@ public class LowerBar extends Fragment {
 //            }
 //        });
 
-
-
-
-
-
-
         return lowerbar;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+
+        mDetector = new GestureDetectorCompat(getContext(), new MyGestureListener());
+
+        view.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (getActivity() instanceof LowerBarFragmentTouchListener){
+                    return mDetector.onTouchEvent(motionEvent);
+                }
+                return false;
+            }
+        });
+    }
+
+
+    class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
+        private static final String DEBUG_TAG = "Gestures";
+
+        @Override
+        public boolean onDown(MotionEvent event) {
+            Log.d(DEBUG_TAG,"onDown: " + event.toString());
+            if (getActivity() instanceof LowerBarFragmentTouchListener){
+                ((LowerBarFragmentTouchListener) getActivity()).goToPlayer();
+            }
+            return true;
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2,
+                               float velocityX, float velocityY) {
+            Log.d(DEBUG_TAG, "onFling: " + e1.toString() + e2.toString());
+            if(velocityY > 0)
+            {
+                if (getActivity() instanceof LowerBarFragmentTouchListener){
+                    ((LowerBarFragmentTouchListener) getActivity()).goToPlayer();
+                }
+            }
+            return true;
+        }
+    }
+
+    public interface LowerBarFragmentTouchListener{
+        void goToPlayer();
     }
 
 }
