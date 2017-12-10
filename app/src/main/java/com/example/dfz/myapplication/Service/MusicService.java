@@ -8,11 +8,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.os.Messenger;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -39,8 +36,6 @@ public class MusicService extends Service {
     private static final String TAG = "MusicService";
 
 
-
-
     private SimpleExoPlayer player;
 
     private long playbackPosition;
@@ -55,9 +50,6 @@ public class MusicService extends Service {
     private final IBinder mBinder = new MyBinder();
 
 
-
-
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -66,7 +58,6 @@ public class MusicService extends Service {
         releasePlayer();
         timer.cancel();
     }
-
 
 
     @Override
@@ -104,25 +95,26 @@ public class MusicService extends Service {
         return START_STICKY;
     }
 
-    private void initializePlayer(String songUri) {
+    private void createPlayer(String songUri) {
         if (player == null) {
-            Log.d(TAG, "initializePlayer: no player now");
+            Log.d(TAG, "createPlayer: no player now");
             player = ExoPlayerFactory.newSimpleInstance(
                     new DefaultRenderersFactory(MusicService.this),
                     new DefaultTrackSelector(), new DefaultLoadControl());
         }
 
+    }
 
+    public void setSong(String songUri){
         player.setPlayWhenReady(playWhenReady);
         player.seekTo(currentWindow, playbackPosition);
-        songUri = "file://" + songUri;
-        Uri uri = Uri.parse(songUri);
-        Log.d(TAG, "initializePlayer: uri = " + uri);
+        this.songUri = "file://" + songUri;
+        Uri uri = Uri.parse(this.songUri);
+        Log.d(TAG, "createPlayer: uri = " + uri);
         MediaSource mediaSource = buildMediaSource(uri);
         player.prepare(mediaSource, true, false);
 
         updateProgress();
-
     }
 
     private void releasePlayer() {
@@ -142,18 +134,10 @@ public class MusicService extends Service {
                 new DefaultExtractorsFactory(), null, null);
     }
 
-    public void seekToPosition(long currentPosition) {
-        player.seekTo(currentPosition);
-    }
-
-    public long getCurrentPosition(){
-        return player.getCurrentPosition();
-    }
-
     private class playback extends AsyncTask<String, SimpleExoPlayer, Void> {
         @Override
         protected Void doInBackground(String... strings) {
-            initializePlayer(strings[0]);
+            createPlayer(strings[0]);
             return null;
         }
     }
@@ -181,13 +165,19 @@ public class MusicService extends Service {
     }
 
     public class MyBinder extends Binder {
-        public MusicService getService(){
+        public MusicService getService() {
             return MusicService.this;
         }
     }
 
 
+    public void seekToPosition(long currentPosition) {
+        player.seekTo(currentPosition);
+    }
 
+    public long getCurrentPosition() {
+        return player.getCurrentPosition();
+    }
 
 
 }

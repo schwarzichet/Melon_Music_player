@@ -82,7 +82,7 @@ public class PlayerActivity extends AppCompatActivity {
         Log.d("durationTimeFormat", duration);
         startTime = (TextView) findViewById(R.id.start_time);
         endTime = (TextView) findViewById(R.id.end_time);
-        startTime.setText("00:00");
+//        startTime.setText("00:00");
         endTime.setText(duration);
     }
 
@@ -148,9 +148,9 @@ public class PlayerActivity extends AppCompatActivity {
     private ServiceConnection mConnection = new ServiceConnection() {
 
         @Override
+
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
-            // We've bound to LocalService, cast the IBinder and get LocalService instance
             MusicService.MyBinder binder = (MusicService.MyBinder) service;
             myService = binder.getService();
             mBound = true;
@@ -161,6 +161,5 @@ public class PlayerActivity extends AppCompatActivity {
             mBound = false;
         }
     };
-
 
 }

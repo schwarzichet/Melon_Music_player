@@ -1,7 +1,10 @@
 package com.example.dfz.myapplication;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -41,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements android.support.v
 
     private String TAG = "mainactivity";
 
+    private MusicService myService;
+    boolean mBound = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +109,13 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         });
 
         mRecyclerView.setAdapter(mAdapter);
+
+
+
+        Intent intent = new Intent(this, MusicService.class);
+        intent.putExtra("songUri", "");
+        intent.putExtra("duration", 0);
+        startService(intent);
     }
 
     @Override
@@ -194,4 +206,21 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         Intent destroyIntent = new Intent(this, MusicService.class);
         stopService(destroyIntent);
     }
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            MusicService.MyBinder binder = (MusicService.MyBinder) service;
+            Log.d(TAG, "onServiceConnected: ");
+            myService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
 }

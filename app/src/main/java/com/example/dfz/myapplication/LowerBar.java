@@ -1,9 +1,14 @@
 package com.example.dfz.myapplication;
 
 import android.app.Fragment;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +36,9 @@ public class LowerBar extends Fragment {
 
 
 
+
+
+
     @Override
     public void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
@@ -40,14 +48,18 @@ public class LowerBar extends Fragment {
         songUri = getArguments().getString("data");
         duration = getArguments().getLong("duration");
 
-        Intent intent = new Intent(getActivity(), MusicService.class);
-        intent.putExtra("songUri", songUri);
-        intent.putExtra("duration", duration);
+//        Intent intent = new Intent(getActivity(), MusicService.class);
+//        intent.putExtra("songUri", songUri);
+//        intent.putExtra("duration", duration);
 
-        getActivity().startService(intent);
+
 
 
     }
+
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,13 +97,10 @@ public class LowerBar extends Fragment {
 //            }
 //        });
 
-
-
-
-
-
-
         return lowerbar;
     }
+
+
+
 
 }
