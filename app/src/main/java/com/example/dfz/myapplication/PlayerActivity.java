@@ -10,8 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
@@ -37,7 +35,7 @@ public class PlayerActivity extends AppCompatActivity {
     private TextView title;
     private TextView artist;
 
-    private Messenger myService = null;
+    private MusicService myService;
     boolean mBound = false;
 
     public static Handler handler;
@@ -129,12 +127,8 @@ public class PlayerActivity extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 int progress = progressBar.getProgress();
                 long currentPosition = (long) ((double) progress / progressBarMax * durationMs);
-                Message msg = Message.obtain(null, MusicService.DRAW_MUSIC_POSITION, currentPosition);
-                try {
-                    myService.send(msg);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
+                myService.seekToPosition(currentPosition);
+
             }
         });
 
@@ -150,21 +144,20 @@ public class PlayerActivity extends AppCompatActivity {
         }
     }
 
+
     private ServiceConnection mConnection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            // This is called when the connection with the service has been
-            // established, giving us the object we can use to
-            // interact with the service.  We are communicating with the
-            // service using a Messenger, so here we get a client-side
-            // representation of that from the raw IBinder object.
-            myService = new Messenger(service);
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            MusicService.MyBinder binder = (MusicService.MyBinder) service;
+            myService = binder.getService();
             mBound = true;
         }
 
-        public void onServiceDisconnected(ComponentName className) {
-            // This is called when the connection with the service has been
-            // unexpectedly disconnected -- that is, its process crashed.
-            myService = null;
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
             mBound = false;
         }
     };

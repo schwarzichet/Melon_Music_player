@@ -3,10 +3,10 @@ package com.example.dfz.myapplication.Service;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -38,7 +38,7 @@ import java.util.TimerTask;
 public class MusicService extends Service {
     private static final String TAG = "MusicService";
 
-    public static final int DRAW_MUSIC_POSITION = 1;
+
 
 
     private SimpleExoPlayer player;
@@ -52,30 +52,10 @@ public class MusicService extends Service {
 
     private final Timer timer = new Timer();
 
-    private final TimerTask timerTask = new TimerTask() {
-        @Override
-        public void run() {
-            long currentPosition = player.getCurrentPosition();
-            //Log.d("cur", currentPosition+"");
-            Message msg = Message.obtain();
-            Bundle bundle = new Bundle();
-            bundle.putLong("duration", durationMs);
-            bundle.putLong("currentPosition", currentPosition);
-
-            //Log.d("bundle", "ok");
-
-            msg.setData(bundle);
-
-            Log.d("send", "ok");
-            if (PlayerActivity.handler!=null){
-                PlayerActivity.handler.sendMessage(msg);
-            }
-        }
-    };
+    private final IBinder mBinder = new MyBinder();
 
 
 
-    final Messenger mMessenger = new Messenger(new MyHandler());
 
 
     @Override
@@ -87,11 +67,12 @@ public class MusicService extends Service {
         timer.cancel();
     }
 
-    @Nullable
+
+
     @Override
     public IBinder onBind(Intent intent) {
 
-        return mMessenger.getBinder();
+        return mBinder;
     }
 
 
@@ -125,6 +106,7 @@ public class MusicService extends Service {
 
     private void initializePlayer(String songUri) {
         if (player == null) {
+            Log.d(TAG, "initializePlayer: no player now");
             player = ExoPlayerFactory.newSimpleInstance(
                     new DefaultRenderersFactory(MusicService.this),
                     new DefaultTrackSelector(), new DefaultLoadControl());
@@ -138,6 +120,7 @@ public class MusicService extends Service {
         Log.d(TAG, "initializePlayer: uri = " + uri);
         MediaSource mediaSource = buildMediaSource(uri);
         player.prepare(mediaSource, true, false);
+
         updateProgress();
 
     }
@@ -159,6 +142,14 @@ public class MusicService extends Service {
                 new DefaultExtractorsFactory(), null, null);
     }
 
+    public void seekToPosition(long currentPosition) {
+        player.seekTo(currentPosition);
+    }
+
+    public long getCurrentPosition(){
+        return player.getCurrentPosition();
+    }
+
     private class playback extends AsyncTask<String, SimpleExoPlayer, Void> {
         @Override
         protected Void doInBackground(String... strings) {
@@ -169,24 +160,34 @@ public class MusicService extends Service {
 
     private void updateProgress() {
 
+        final TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                long currentPosition = player.getCurrentPosition();
+                Message msg = Message.obtain();
+                Bundle bundle = new Bundle();
+                bundle.putLong("duration", durationMs);
+                bundle.putLong("currentPosition", currentPosition);
+                msg.setData(bundle);
 
+
+                if (PlayerActivity.handler != null) {
+                    Log.d("send", "ok");
+                    PlayerActivity.handler.sendMessage(msg);
+                }
+            }
+        };
         timer.schedule(timerTask, 0, 500);
     }
 
-
-    private  class MyHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case DRAW_MUSIC_POSITION:
-                    long currentPosition = (long) msg.obj;
-                    player.seekTo(currentPosition);
-                    break;
-                default:
-                    super.handleMessage(msg);
-            }
+    public class MyBinder extends Binder {
+        public MusicService getService(){
+            return MusicService.this;
         }
     }
+
+
+
 
 
 }

@@ -55,14 +55,10 @@ public class MainActivity extends AppCompatActivity implements android.support.v
 
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
 
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
+
         mRecyclerView.setHasFixedSize(true);
 
-        //layout manager has been set in fragment_content_slide
-//        // use a linear layout manager
-//        mLayoutManager = new LinearLayoutManager(this);
-//        mRecyclerView.setLayoutManager(mLayoutManager);
+
 
         Log.d(TAG, "onCreate: i am goimg to load songs");
 
