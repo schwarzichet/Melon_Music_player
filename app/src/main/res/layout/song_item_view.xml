@@ -5,17 +5,13 @@
 
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="72dp"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardBackgroundColor="@android:color/white" >
-    <!--app:cardCornerRadius="0dp"-->
-    <!--app:cardElevation="0.5dp"-->
-    <!--app:cardMaxElevation="5dp"-->
-    <!--app:cardPreventCornerOverlap="true"-->
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -38,12 +34,15 @@
             android:layout_gravity="center"
             android:layout_toEndOf="@+id/albumImage"
             android:layout_centerVertical="true"
-            android:paddingStart="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_toStartOf="@+id/buttonMore"
             android:orientation="vertical">
 
 
             <TextView
                 android:id="@+id/SongTitle"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"

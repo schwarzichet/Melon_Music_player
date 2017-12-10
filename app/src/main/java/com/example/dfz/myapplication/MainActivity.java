@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
 
-        //layout manager has been set in content_main
+        //layout manager has been set in fragment_content_slide
 //        // use a linear layout manager
 //        mLayoutManager = new LinearLayoutManager(this);
 //        mRecyclerView.setLayoutManager(mLayoutManager);
@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
                 intent.putExtra("Duration", songs.get(position).getDuration());
                 startActivity(intent);
 
+
             }
 
             @Override
@@ -95,10 +96,12 @@ public class MainActivity extends AppCompatActivity implements android.support.v
                 Toast.makeText(MainActivity.this, "long click " + songs.get(position) + " item", Toast.LENGTH_SHORT).show();
                 //PlaylistCoverFragment playlistCover = new PlaylistCoverFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString("title", songs.get(position).getTitle());
-                bundle.putString("artist", songs.get(position).getArtist());
-                bundle.putInt("albumId", songs.get(position).getAlbumID());
-                bundle.putString("data", songs.get(position).getData());
+                Song s = songs.get(position);
+                bundle.putString("title", s.getTitle());
+                bundle.putString("artist", s.getArtist());
+                bundle.putInt("albumId", s.getAlbumID());
+                bundle.putString("data", s.getData());
+                bundle.putLong("duration", s.getDuration());
 
                 LowerBar lowerBar = new LowerBar();
                 lowerBar.setArguments(bundle);
