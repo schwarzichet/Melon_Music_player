@@ -28,7 +28,7 @@ public class PlayerActivity extends AppCompatActivity {
 
     private ImageView albumImageView;
     private SeekBar progressBar;
-    private TextView startTime;
+    private TextView currentTime;
     private TextView endTime;
     private long durationMs;
 
@@ -55,35 +55,42 @@ public class PlayerActivity extends AppCompatActivity {
 
         setContentView(R.layout.player_layout);
 
-        progressBar = findViewById(R.id.seekbar);
-        progressBarMax = progressBar.getMax();
-
-
         albumImageView = findViewById(R.id.albumCover);
         title = (TextView) findViewById(R.id.current_song_name);
         artist = (TextView) findViewById((R.id.current_song_by));
+
+        progressBar = findViewById(R.id.seekbar);
+        progressBarMax = progressBar.getMax();
+        currentTime = (TextView) findViewById(R.id.start_time);
+        endTime = (TextView) findViewById(R.id.end_time);
+
         Intent intent = getIntent();
         int albumId = intent.getIntExtra("albumId", 0);
         String currentSongName = intent.getStringExtra("title");
         String currentSongBy = intent.getStringExtra("artist");
-        durationMs = intent.getLongExtra("Duration", 0);
+        durationMs = intent.getLongExtra("duration", 0);
+
+        Intent intentService = new Intent(this, MusicService.class);
+        bindService(intentService, mConnection, Context.BIND_AUTO_CREATE);
+        long currentMs = myService.getCurrentPosition();
 
         Uri imageUri = SongUtil.getAlbumArt(albumId);
         Glide.with(this).load(imageUri).into(albumImageView);
 
         title.setText(currentSongName);
         artist.setText(currentSongBy);
-        String song = (String) title.getText();
-        Log.d("song", song);
-
 
         TimeFormat durationTimeFormat = new TimeFormat(durationMs);
         String duration = durationTimeFormat.toTimeFormat();
-        Log.d("durationTimeFormat", duration);
-        startTime = (TextView) findViewById(R.id.start_time);
-        endTime = (TextView) findViewById(R.id.end_time);
-//        startTime.setText("00:00");
+
+        TimeFormat currentTimeFormat = new TimeFormat(currentMs);
+        String current = currentTimeFormat.toTimeFormat();
+
+        currentTime.setText(current);
         endTime.setText(duration);
+
+        int progress = (int) Math.round((double) currentMs / durationMs * progressBarMax);
+        progressBar.setProgress(progress);
     }
 
 
@@ -92,8 +99,7 @@ public class PlayerActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
 
-        Intent intent = new Intent(this, MusicService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
 
 
         handler = new Handler() {
@@ -104,8 +110,8 @@ public class PlayerActivity extends AppCompatActivity {
                 Bundle bundle = msg.getData();
                 long currentPosition = bundle.getLong("currentPosition");
                 TimeFormat current = new TimeFormat(currentPosition);
-                String currentTime = current.toTimeFormat();
-                startTime.setText(currentTime);
+                String currentTimef = current.toTimeFormat();
+                currentTime.setText(currentTimef);
                 int progress = (int) Math.round((double) currentPosition / durationMs * progressBarMax);
                 progressBar.setProgress(progress);
             }
@@ -148,7 +154,6 @@ public class PlayerActivity extends AppCompatActivity {
     private ServiceConnection mConnection = new ServiceConnection() {
 
         @Override
-
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
             MusicService.MyBinder binder = (MusicService.MyBinder) service;
@@ -161,5 +166,6 @@ public class PlayerActivity extends AppCompatActivity {
             mBound = false;
         }
     };
+
 
 }

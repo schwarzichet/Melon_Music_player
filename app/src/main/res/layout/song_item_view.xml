@@ -11,7 +11,10 @@
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardBackgroundColor="@android:color/white" >
-
+    <!--app:cardCornerRadius="0dp"-->
+    <!--app:cardElevation="0.5dp"-->
+    <!--app:cardMaxElevation="5dp"-->
+    <!--app:cardPreventCornerOverlap="true"-->
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -29,20 +32,19 @@
             android:scaleType="centerCrop" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_toEndOf="@+id/albumImage"
             android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/albumImage"
             android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
             android:layout_toStartOf="@+id/buttonMore"
+            android:layout_marginEnd="15dp"
             android:orientation="vertical">
 
 
             <TextView
                 android:id="@+id/SongTitle"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
