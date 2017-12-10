@@ -1,8 +1,9 @@
-package com.example.dfz.myapplication;
+package com.example.dfz.myapplication.Service;
 
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -12,10 +13,11 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.dfz.myapplication.MainActivity;
+import com.example.dfz.myapplication.PlayerActivity;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -36,7 +38,7 @@ import java.util.TimerTask;
 public class MusicService extends Service {
     private static final String TAG = "MusicService";
 
-    static final int DRAW_MUSIC_POSITION = 1;
+    public static final int DRAW_MUSIC_POSITION = 1;
 
 
     private SimpleExoPlayer player;
@@ -48,11 +50,30 @@ public class MusicService extends Service {
     private String songUri;
     private long durationMs;
 
-    private Handler handler = new MyHandler();
+    private final Timer timer = new Timer();
 
-    public MusicService() {
+    private final TimerTask timerTask = new TimerTask() {
+        @Override
+        public void run() {
+            long currentPosition = player.getCurrentPosition();
+            //Log.d("cur", currentPosition+"");
+            Message msg = Message.obtain();
+            Bundle bundle = new Bundle();
+            bundle.putLong("duration", durationMs);
+            bundle.putLong("currentPosition", currentPosition);
 
-    }
+            //Log.d("bundle", "ok");
+
+            msg.setData(bundle);
+
+            Log.d("send", "ok");
+            if (PlayerActivity.handler!=null){
+                PlayerActivity.handler.sendMessage(msg);
+            }
+        }
+    };
+
+
 
     final Messenger mMessenger = new Messenger(new MyHandler());
 
@@ -63,6 +84,7 @@ public class MusicService extends Service {
         Toast.makeText(this, "service destroy", Toast.LENGTH_SHORT).show();
         Log.d(TAG, "onDestroy: service destroy");
         releasePlayer();
+        timer.cancel();
     }
 
     @Nullable
@@ -146,33 +168,13 @@ public class MusicService extends Service {
     }
 
     private void updateProgress() {
-        final Timer timer = new Timer();
-        final TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                long currentPosition = player.getCurrentPosition();
-                //Log.d("cur", currentPosition+"");
-                Message msg = Message.obtain();
-                Bundle bundle = new Bundle();
-                bundle.putLong("duration", durationMs);
-                bundle.putLong("currentPosition", currentPosition);
 
-                //Log.d("bundle", "ok");
 
-                msg.setData(bundle);
-
-                Log.d("send", "ok");
-                if (PlayerActivity.handler!=null){
-                    PlayerActivity.handler.sendMessage(msg);
-                }
-            }
-        };
         timer.schedule(timerTask, 0, 500);
-        //Log.d("sche", "ok");
     }
 
 
-    private class MyHandler extends Handler {
+    private  class MyHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {

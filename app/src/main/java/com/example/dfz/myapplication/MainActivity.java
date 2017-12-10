@@ -24,6 +24,7 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.example.dfz.myapplication.Model.Song;
+import com.example.dfz.myapplication.Service.MusicService;
 
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
@@ -50,14 +51,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+
 
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
 
@@ -198,4 +192,10 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Intent destroyIntent = new Intent(this, MusicService.class);
+        stopService(destroyIntent);
+    }
 }

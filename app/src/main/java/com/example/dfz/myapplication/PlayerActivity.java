@@ -21,11 +21,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.dfz.myapplication.MUtils.SongUtil;
 import com.example.dfz.myapplication.MUtils.TimeFormat;
+import com.example.dfz.myapplication.Service.MusicService;
 
 public class PlayerActivity extends AppCompatActivity {
 
     private static final String TAG = "PLAYERACTIVITY";
-    private String songUri;
     private int progressBarMax = 0;
 
     private ImageView albumImageView;
