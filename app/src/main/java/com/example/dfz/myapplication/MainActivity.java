@@ -37,18 +37,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.Inflater;
 
-public class MainActivity extends AppCompatActivity implements android.support.v7.widget.PopupMenu.OnMenuItemClickListener, LowerBar.LowerBarFragmentTouchListener {
+public class MainActivity extends AppCompatActivity implements android.support.v7.widget.PopupMenu.OnMenuItemClickListener, LowerBar.LowerBarFragmentTouchListener, LowerBar.LowerBarPlayButtonClickListener, LowerBar.LowerBarNextButtonClickListener {
     private RecyclerView mRecyclerView;
     private MySongAdapter mAdapter;
     private ArrayList<Song> songs = new ArrayList<>();
     private int nowPosition = 0;
 
     private long currentTimeMs = 0;
+    private boolean isPlaying = false;
 
     private String TAG = "mainactivity";
 
     private MusicService myService;
     boolean mBound = false;
+
+    android.app.FragmentManager fragmentManager;
+    android.app.FragmentTransaction fragmentTransaction;
 
     @Override
     protected void onStart() {
@@ -80,8 +84,11 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         Log.d(TAG, "onCreate: startService");
 
 
+        
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
 
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
@@ -92,31 +99,30 @@ public class MainActivity extends AppCompatActivity implements android.support.v
 
         songs = SongLoader.loadSongs(MainActivity.this);
 
-        Log.d(TAG, "onCreate: song number is " + songs.size());
+        Log.d(TAG, "onCreate: song number is "+songs.size());
         mAdapter = new MySongAdapter(MainActivity.this, songs);
         mAdapter.setOnItemClickListener(new MySongAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 nowPosition = position;
 
+                isPlaying = true;
                 Bundle bundle = new Bundle();
                 Song s = songs.get(position);
                 bundle.putString("title", s.getTitle());
                 bundle.putString("artist", s.getArtist());
                 bundle.putInt("albumId", s.getAlbumID());
-                bundle.putString("songUri", s.getData());
                 bundle.putLong("duration", s.getDuration());
 
                 LowerBar lowerBar = new LowerBar();
                 lowerBar.setArguments(bundle);
-                android.app.FragmentManager fragmentManager = getFragmentManager();
-                android.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentManager = getFragmentManager();
+                fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.lower_bar, lowerBar);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 
-
-                MainActivity.this.setSong(s.getData());
+                myService.setSong(s.getData());
 
             }
 
@@ -135,8 +141,6 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         });
 
         mRecyclerView.setAdapter(mAdapter);
-
-
     }
 
     @Override
@@ -242,13 +246,15 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     };
 
     @Override
-    public void goToPlayer() {
+    public void goToPlayer(Bundle bundle) {
+        currentTimeMs = bundle.getLong("currentMs");
         Intent intent = new Intent(MainActivity.this, PlayerActivity.class);
         intent.putExtra("albumId", songs.get(nowPosition).getAlbumID());
         intent.putExtra("title", songs.get(nowPosition).getTitle());
         intent.putExtra("artist", songs.get(nowPosition).getArtist());
         intent.putExtra("duration", songs.get(nowPosition).getDuration());
         intent.putExtra("currentTimeMs", currentTimeMs);
+        intent.putExtra("isPlaying", isPlaying);
         startActivity(intent);
     }
 
@@ -258,5 +264,48 @@ public class MainActivity extends AppCompatActivity implements android.support.v
 //        Log.d(TAG, "setSong: again set bind");
         myService.setSong(uri);
 //        unbindService(mConnection);
+    }
+
+    @Override
+    public void playOrPause() {
+
+        if(isPlaying) {
+            myService.pause();
+        }
+        else {
+            myService.start();
+        }
+        isPlaying = !isPlaying;
+    }
+
+    @Override
+    public void nextSong() {
+        if(nowPosition < songs.size()-1)
+        {
+            nowPosition++;
+        }
+        else {
+            nowPosition = 0;
+        }
+
+        Bundle bundle = new Bundle();
+        Song s = songs.get(nowPosition);
+        bundle.putString("title", s.getTitle());
+        bundle.putString("artist", s.getArtist());
+        bundle.putInt("albumId", s.getAlbumID());
+        bundle.putLong("duration", s.getDuration());
+
+        LowerBar lowerBar = new LowerBar();
+        lowerBar.setArguments(bundle);
+        fragmentManager = getFragmentManager();
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentManager.popBackStack();
+        fragmentTransaction.replace(R.id.lower_bar, lowerBar);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
+        myService.setSong(s.getData());
+        myService.start();
+        isPlaying = true;
     }
 }

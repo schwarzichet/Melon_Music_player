@@ -34,9 +34,9 @@ public class LowerBar extends Fragment {
     private String title;
     private String artist;
     private int albumId;
-    private String songUri;
     private long duration;
     private long currentMs;
+    private boolean isPlaying = false;
 
     private GestureDetectorCompat mDetector;
 
@@ -46,15 +46,8 @@ public class LowerBar extends Fragment {
         title = getArguments().getString("title");
         artist = getArguments().getString("artist");
         albumId = getArguments().getInt("albumId");
-        songUri = getArguments().getString("songUri");
         duration = getArguments().getLong("duration");
-
-//        Intent intent = new Intent(getActivity(), MusicService.class);
-//        intent.putExtra("songUri", songUri);
-//        intent.putExtra("duration", duration);
-//        getActivity().startService(intent);
-
-
+        isPlaying = true;
     }
 
     @Override
@@ -71,27 +64,32 @@ public class LowerBar extends Fragment {
         title_view.setText(title);
 
         final ImageButton playOrPause = lowerbar.findViewById(R.id.lowerbar_playbutton);
-//        playOrPause.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                player.setPlayWhenReady(!player.getPlayWhenReady());
-//
-//                if(isPlaying)
-//                    playOrPause.setImageResource(R.drawable.ic_pause);
-//                else
-//                    playOrPause.setImageResource(R.drawable.ic_play_arrow);
-//                isPlaying = !isPlaying;
-//            }
-//
-//        });
+        playOrPause.setOnClickListener(new View.OnClickListener() {
 
-//        ImageButton nextSong = lowerbar.findViewById(R.id.lowerbar_nextbutton);
-//        nextSong.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
+            @Override
+            public void onClick(View view) {
+
+                if (getActivity() instanceof LowerBarPlayButtonClickListener) {
+                    if(isPlaying)
+                        playOrPause.setImageResource(R.drawable.ic_play_arrow);
+                    else
+                        playOrPause.setImageResource(R.drawable.ic_pause);
+                    isPlaying = !isPlaying;
+                    ((LowerBarPlayButtonClickListener) getActivity()).playOrPause();
+                }
+            }
+        });
+
+        final ImageButton nextSong = lowerbar.findViewById(R.id.lowerbar_nextbutton);
+        nextSong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getActivity() instanceof LowerBarNextButtonClickListener) {
+                    ((LowerBarNextButtonClickListener) getActivity()).nextSong();
+                    playOrPause.setImageResource(R.drawable.ic_pause);
+                }
+            }
+        });
 
         return lowerbar;
     }
@@ -119,9 +117,11 @@ public class LowerBar extends Fragment {
 
         @Override
         public boolean onDown(MotionEvent event) {
-            Log.d(DEBUG_TAG, "onDown: " + event.toString());
-            if (getActivity() instanceof LowerBarFragmentTouchListener) {
-                ((LowerBarFragmentTouchListener) getActivity()).goToPlayer();
+            Log.d(DEBUG_TAG,"onDown: " + event.toString());
+            if (getActivity() instanceof LowerBarFragmentTouchListener){
+                Bundle bundle = new Bundle();
+                bundle.putLong("currentMs", currentMs);
+                ((LowerBarFragmentTouchListener) getActivity()).goToPlayer(bundle);
             }
             return true;
         }
@@ -130,17 +130,28 @@ public class LowerBar extends Fragment {
         public boolean onFling(MotionEvent e1, MotionEvent e2,
                                float velocityX, float velocityY) {
             Log.d(DEBUG_TAG, "onFling: " + e1.toString() + e2.toString());
-            if (velocityY > 0) {
-                if (getActivity() instanceof LowerBarFragmentTouchListener) {
-                    ((LowerBarFragmentTouchListener) getActivity()).goToPlayer();
+            if(velocityY > 0)
+            {
+                if (getActivity() instanceof LowerBarFragmentTouchListener){
+                    Bundle bundle = new Bundle();
+                    bundle.putLong("currentMs", currentMs);
+                    ((LowerBarFragmentTouchListener) getActivity()).goToPlayer(bundle);
                 }
             }
             return true;
         }
     }
 
-    public interface LowerBarFragmentTouchListener {
-        void goToPlayer();
+    public interface LowerBarFragmentTouchListener{
+        void goToPlayer(Bundle bundle);
+    }
+
+    public interface LowerBarPlayButtonClickListener {
+        void playOrPause();
+    }
+
+    public interface LowerBarNextButtonClickListener {
+        void nextSong();
     }
 
 }

@@ -12,6 +12,8 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -35,11 +37,18 @@ public class PlayerActivity extends AppCompatActivity {
     private TextView title;
     private TextView artist;
 
+    private ImageButton controlBarPlay;
+    private ImageButton previousSong;
+    private ImageButton nextSong;
+    private ImageButton switchMode;
+    private ImageButton moreOperation;
+
+    private boolean isPlaying = false;
+
     private MusicService myService;
     boolean mBound = false;
 
     public static Handler handler;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,16 +78,8 @@ public class PlayerActivity extends AppCompatActivity {
         String currentSongName = intent.getStringExtra("title");
         String currentSongBy = intent.getStringExtra("artist");
         durationMs = intent.getLongExtra("duration", 0);
-
-        Intent intentService = new Intent(this, MusicService.class);
-        bindService(intentService, mConnection, Context.BIND_AUTO_CREATE);
-
-
-        long currentMs = 0;
-        while (mBound){
-            currentMs = myService.getCurrentPosition();
-        }
-
+        long currentMs = intent.getLongExtra("currentTimeMs", 0);
+        isPlaying = intent.getBooleanExtra("isPlaying", false);
 
         Uri imageUri = SongUtil.getAlbumArt(albumId);
         Glide.with(this).load(imageUri).into(albumImageView);
@@ -97,6 +98,18 @@ public class PlayerActivity extends AppCompatActivity {
 
         int progress = (int) Math.round((double) currentMs / durationMs * progressBarMax);
         progressBar.setProgress(progress);
+
+        controlBarPlay = findViewById(R.id.control_bar_play);
+        previousSong = findViewById(R.id.previous_song);
+        nextSong = findViewById(R.id.next_song);
+        switchMode = findViewById(R.id.switch_mode);
+        moreOperation = findViewById(R.id.more_operation);
+
+        if(isPlaying)
+            controlBarPlay.setImageResource(R.drawable.ic_pause);
+        else
+            controlBarPlay.setImageResource(R.drawable.ic_play_arrow);
+
     }
 
 
@@ -105,7 +118,8 @@ public class PlayerActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
 
-
+        Intent intent = new Intent(this, MusicService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
 
         handler = new Handler() {
@@ -123,6 +137,32 @@ public class PlayerActivity extends AppCompatActivity {
             }
         };
 
+        controlBarPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isPlaying)
+                {
+                    myService.pause();
+                    controlBarPlay.setImageResource(R.drawable.ic_play_arrow);
+                }
+                else
+                {
+                    myService.start();
+                    controlBarPlay.setImageResource(R.drawable.ic_pause);
+                }
+                isPlaying = !isPlaying;
+            }
+        });
+
+        nextSong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isPlaying = true;
+                controlBarPlay.setImageResource(R.drawable.ic_pause);
+
+                //
+            }
+        });
 
         progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -171,9 +211,6 @@ public class PlayerActivity extends AppCompatActivity {
         public void onServiceDisconnected(ComponentName arg0) {
             mBound = false;
         }
-
-
     };
-
 
 }

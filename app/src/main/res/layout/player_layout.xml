@@ -102,4 +102,9 @@
 
     </RelativeLayout>
 
+    <include layout="@layout/fragment_player_control_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"/>
+
 </RelativeLayout>
