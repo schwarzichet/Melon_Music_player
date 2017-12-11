@@ -37,6 +37,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:singleLine="true"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
                 android:textSize="20sp"
                 android:textColor="@android:color/black"
                 android:text="Song" />

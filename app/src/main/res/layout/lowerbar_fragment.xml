@@ -13,8 +13,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp">
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp">
 
         <ImageView
             android:id="@+id/lowerbar_image"
@@ -31,6 +31,8 @@
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/lowerbar_image"
             android:layout_marginStart="10dp"
+            android:layout_toStartOf="@+id/lowerbar_playbutton"
+            android:layout_marginEnd="5dp"
             android:orientation="vertical"
             android:gravity="center_vertical"
             tools:ignore="RelativeOverlap">
@@ -42,6 +44,8 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="3dp"
                 android:singleLine="true"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
                 android:textSize="16sp"
                 android:textColor="@android:color/black"
                 android:text="@string/song" />
@@ -52,40 +56,31 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:textSize="14sp"
-                android:textColor="@android:color/black"
+                android:textSize="12sp"
+                android:textColor="?android:textColorSecondary"
                 android:text="@string/singer" />
 
         </LinearLayout>
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+        <ImageButton
+            android:id="@+id/lowerbar_playbutton"
+            android:src="@drawable/ic_pause"
+            android:background="@android:color/transparent"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/lowerbar_nextbutton"
+            android:layout_marginEnd="5dp"/>
+
+        <ImageButton
+            android:id="@+id/lowerbar_nextbutton"
+            android:src="@drawable/ic_skip_next"
+            android:background="@android:color/transparent"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="10dp">
-
-            <ImageButton
-                android:id="@+id/lowerbar_playbutton"
-                android:src="@drawable/ic_pause"
-                android:background="@android:color/transparent"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@+id/lowerbar_nextbutton"
-                android:layout_marginEnd="5dp"/>
-
-            <ImageButton
-                android:id="@+id/lowerbar_nextbutton"
-                android:src="@drawable/ic_skip_next"
-                android:background="@android:color/transparent"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"
-                android:onClick="nextSong" />
-
-        </RelativeLayout>
-
+            android:onClick="nextSong" />
 
     </RelativeLayout>
 

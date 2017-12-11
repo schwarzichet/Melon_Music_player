@@ -118,6 +118,8 @@ public class MainActivity extends AppCompatActivity implements android.support.v
                 lowerBar.setArguments(bundle);
                 fragmentManager = getFragmentManager();
                 fragmentTransaction = fragmentManager.beginTransaction();
+                if(fragmentManager.getBackStackEntryCount()>0)
+                    fragmentManager.popBackStack();
                 fragmentTransaction.replace(R.id.lower_bar, lowerBar);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
@@ -141,6 +143,11 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         });
 
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
     }
 
     @Override
