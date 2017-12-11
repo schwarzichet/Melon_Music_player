@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.Messenger;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -17,10 +18,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.dfz.myapplication.MUtils.SongUtil;
 import com.example.dfz.myapplication.MUtils.TimeFormat;
+import com.example.dfz.myapplication.Model.Song;
 import com.example.dfz.myapplication.Service.MusicService;
 
 public class PlayerActivity extends AppCompatActivity {
@@ -49,6 +52,57 @@ public class PlayerActivity extends AppCompatActivity {
     boolean mBound = false;
 
     public static Handler handler;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacksAndMessages(null);
+    }
+
+    public static Messenger messenger;
+    public final static int UPDATE_PROGRESS = 1;
+    public final static int NEXT_SONG = 2;
+
+    private class playerActivityHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            Log.d(TAG, "handleMessage: yes i recieve msg from music service");
+            if (PlayerActivity.this.isDestroyed()) {
+                return;
+            }
+            switch (msg.what) {
+                case UPDATE_PROGRESS:
+
+                    Bundle bundle = msg.getData();
+                    long currentPosition = bundle.getLong("currentPosition");
+                    TimeFormat current = new TimeFormat(currentPosition);
+                    String currentTimef = current.toTimeFormat();
+                    currentTime.setText(currentTimef);
+                    int progress = (int) Math.round((double) currentPosition / durationMs * progressBarMax);
+                    progressBar.setProgress(progress);
+                    break;
+                case NEXT_SONG:
+                    Song song = (Song) msg.obj;
+                    updateView(song);
+                    break;
+                default:
+                    super.handleMessage(msg);
+            }
+        }
+    }
+
+    private void updateView(Song song) {
+        Uri imageUri = SongUtil.getAlbumArt(song.getAlbumID());
+        Glide.with(this).load(imageUri).into(albumImageView);
+
+        title.setText(song.getTitle());
+        artist.setText(song.getArtist());
+
+        durationMs = song.getDuration();
+        TimeFormat durationTimeFormat = new TimeFormat(song.getDuration());
+        String durationString = durationTimeFormat.toTimeFormat();
+        endTime.setText(durationString);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +159,7 @@ public class PlayerActivity extends AppCompatActivity {
         switchMode = findViewById(R.id.switch_mode);
         moreOperation = findViewById(R.id.more_operation);
 
-        if(isPlaying)
+        if (isPlaying)
             controlBarPlay.setImageResource(R.drawable.ic_pause);
         else
             controlBarPlay.setImageResource(R.drawable.ic_play_arrow);
@@ -122,31 +176,18 @@ public class PlayerActivity extends AppCompatActivity {
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
 
-        handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                Log.d(TAG, "handleMessage: yes i recieve msg from music service");
-                super.handleMessage(msg);
-                Bundle bundle = msg.getData();
-                long currentPosition = bundle.getLong("currentPosition");
-                TimeFormat current = new TimeFormat(currentPosition);
-                String currentTimef = current.toTimeFormat();
-                currentTime.setText(currentTimef);
-                int progress = (int) Math.round((double) currentPosition / durationMs * progressBarMax);
-                progressBar.setProgress(progress);
-            }
-        };
+        handler = new playerActivityHandler();
+
+        messenger = new Messenger(handler);
+
 
         controlBarPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isPlaying)
-                {
+                if (isPlaying) {
                     myService.pause();
                     controlBarPlay.setImageResource(R.drawable.ic_play_arrow);
-                }
-                else
-                {
+                } else {
                     myService.start();
                     controlBarPlay.setImageResource(R.drawable.ic_pause);
                 }

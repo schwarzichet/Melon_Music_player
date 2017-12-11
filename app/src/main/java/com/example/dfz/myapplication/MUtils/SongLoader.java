@@ -1,4 +1,4 @@
-package com.example.dfz.myapplication;
+package com.example.dfz.myapplication.MUtils;
 
 import android.content.Context;
 import android.database.Cursor;

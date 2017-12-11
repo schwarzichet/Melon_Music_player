@@ -34,8 +34,7 @@ public class LowerBar extends Fragment {
     private String title;
     private String artist;
     private int albumId;
-    private long duration;
-    private long currentMs;
+    private long currentMs=0;
     private boolean isPlaying = false;
 
     private GestureDetectorCompat mDetector;
@@ -46,7 +45,6 @@ public class LowerBar extends Fragment {
         title = getArguments().getString("title");
         artist = getArguments().getString("artist");
         albumId = getArguments().getInt("albumId");
-        duration = getArguments().getLong("duration");
         isPlaying = true;
     }
 

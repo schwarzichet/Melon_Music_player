@@ -3,6 +3,8 @@ package com.example.dfz.myapplication.Model;
 import android.content.ContentUris;
 import android.net.Uri;
 
+import java.util.Objects;
+
 
 /**
  * Created by DFZ on 2017/10/31.
@@ -93,5 +95,9 @@ public class Song {
         return year;
     }
 
-
+    @Override
+    public boolean equals(Object obj) {
+        Song s = (Song)obj;
+        return this.getData().equals(s.getData());
+    }
 }
