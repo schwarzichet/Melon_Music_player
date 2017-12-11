@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     protected void onResume() {
         super.onResume();
         this.isVisible = true;
+        updateFragment();
     }
 
     @Override

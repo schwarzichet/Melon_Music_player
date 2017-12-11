@@ -331,6 +331,7 @@ public class MusicService extends Service {
         }
         Song s = this.songs.get(nowSongIndex);
 
+
         isPrevious = true;
         player.setPlayWhenReady(!playWhenReady);
         isPrevious = false;
