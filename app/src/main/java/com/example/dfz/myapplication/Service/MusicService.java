@@ -14,7 +14,6 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.dfz.myapplication.LowerBar;
 import com.example.dfz.myapplication.MUtils.SongLoader;
 import com.example.dfz.myapplication.MainActivity;
 import com.example.dfz.myapplication.Model.Song;
@@ -49,21 +48,24 @@ public class MusicService extends Service {
     private ArrayList<Song> songs = new ArrayList<>();
 
 
-
     private SimpleExoPlayer player;
 
     private long playbackPosition;
     private int currentWindow;
     private boolean playWhenReady = true;
-//    private ArrayList<MediaSource> mediaSources = new ArrayList<>();
+    //    private ArrayList<MediaSource> mediaSources = new ArrayList<>();
     private int nowSongIndex;
 
-//    private String songUri;
+    //    private String songUri;
     private long durationMs;
 
     private final Timer timer = new Timer();
 
     private final IBinder mBinder = new MyBinder();
+
+
+    private boolean isNext = false;
+    private boolean isPrevious = false;
 
 
     @Override
@@ -140,21 +142,25 @@ public class MusicService extends Service {
 
                 @Override
                 public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-                    if (playbackState == Player.STATE_ENDED) {
+                    Log.d(TAG, "onPlayerStateChanged: 2333" + playbackState);
+                    if (playbackState == Player.STATE_ENDED || isNext || isPrevious) {
 
-                        nowSongIndex += 1;
+
                         Song song = songs.get(nowSongIndex);
                         durationMs = song.getDuration();
-                        player.prepare(getMediaSource(song.getData()), true, true);
                         Toast.makeText(getBaseContext(), "next song", Toast.LENGTH_SHORT).show();
 
                         Message msgPlayerActivity = Message.obtain(null, PlayerActivity.NEXT_SONG, song);
 
-//                        Message msgLowerBar = Message.obtain(null, MainActivity.MSG_NEXT_SONG, song);
+                        Message msgLowerBar = Message.obtain(null, MainActivity.MSG_NEXT_SONG, song);
 
                         try {
-                            PlayerActivity.messenger.send(msgPlayerActivity);
-//                            MainActivity.messenger.send(msgLowerBar);
+                            if (MainActivity.isVisible) {
+                                MainActivity.messenger.send(msgLowerBar);
+                            }
+                            if (PlayerActivity.isVisible) {
+                                PlayerActivity.messenger.send(msgPlayerActivity);
+                            }
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         }
@@ -206,6 +212,7 @@ public class MusicService extends Service {
     public Song nowPlaySong() {
         return this.songs.get(nowSongIndex);
     }
+
 
     private class playback extends AsyncTask<Void, SimpleExoPlayer, Void> {
         @Override
@@ -285,9 +292,9 @@ public class MusicService extends Service {
     public void playSong(Song s) {
 
         int index = songs.indexOf(s);
-        if (index!=-1){
+        if (index != -1) {
             nowSongIndex = index;
-        }else {
+        } else {
             songs.add(nowSongIndex, s);
         }
         durationMs = s.getDuration();
@@ -297,20 +304,41 @@ public class MusicService extends Service {
         updateProgress();
     }
 
-    public void playNext(){
-        if (nowSongIndex < this.songs.size()){
+    public void playNext() {
+
+        if (nowSongIndex < this.songs.size()) {
             nowSongIndex++;
 
-        }else {
-            Toast.makeText(getBaseContext(), "no more song!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getBaseContext(), "no next song!", Toast.LENGTH_SHORT).show();
+            nowSongIndex = 0;
+        }
+        Song s = this.songs.get(nowSongIndex);
+        isNext = true;
+        player.setPlayWhenReady(!playWhenReady);
+        isNext = false;
+        player.setPlayWhenReady(playWhenReady);
+        Log.d(TAG, "playNext: " + nowSongIndex);
+        playSong(s);
+    }
+
+    public void playPrevious() {
+        if (nowSongIndex > 0) {
+            nowSongIndex--;
+        } else {
+            Toast.makeText(getBaseContext(), "no previous song!", Toast.LENGTH_SHORT).show();
             nowSongIndex = 0;
         }
         Song s = this.songs.get(nowSongIndex);
 
+        isPrevious = true;
+        player.setPlayWhenReady(!playWhenReady);
+        isPrevious = false;
+        player.setPlayWhenReady(playWhenReady);
         playSong(s);
     }
 
-    private MediaSource getMediaSource(String songUri){
+    private MediaSource getMediaSource(String songUri) {
         songUri = "file://" + songUri;
         Uri uri = Uri.parse(songUri);
         Log.d(TAG, "prepare media: uri = " + uri);
@@ -322,14 +350,6 @@ public class MusicService extends Service {
         player.setRepeatMode(Player.REPEAT_MODE_ONE);
 
     }
-
-//    public void setSongIndex(int index) {
-//        this.nowSongIndex = index;
-//        Log.d(TAG, "playSong`Index: " + index);
-//        player.prepare(this.mediaSources.get(index), true, false);
-//        this.start();
-//        updateProgress();
-//    }
 
 
 }

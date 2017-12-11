@@ -18,7 +18,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.dfz.myapplication.MUtils.SongUtil;
@@ -47,11 +46,26 @@ public class PlayerActivity extends AppCompatActivity {
     private ImageButton moreOperation;
 
     private boolean isPlaying = false;
+    public static boolean isVisible = true;
 
     private MusicService myService;
     boolean mBound = false;
 
     public static Handler handler;
+
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        this.isVisible = false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.isVisible = true;
+    }
 
     @Override
     protected void onDestroy() {
@@ -156,6 +170,7 @@ public class PlayerActivity extends AppCompatActivity {
         controlBarPlay = findViewById(R.id.control_bar_play);
         previousSong = findViewById(R.id.previous_song);
         nextSong = findViewById(R.id.next_song);
+        previousSong = findViewById(R.id.previous_song);
         switchMode = findViewById(R.id.switch_mode);
         moreOperation = findViewById(R.id.more_operation);
 
@@ -200,8 +215,17 @@ public class PlayerActivity extends AppCompatActivity {
             public void onClick(View view) {
                 isPlaying = true;
                 controlBarPlay.setImageResource(R.drawable.ic_pause);
+                myService.playNext();
 
-                //
+            }
+        });
+
+        previousSong.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                isPlaying = true;
+                controlBarPlay.setImageResource(R.drawable.ic_pause);
+                myService.playPrevious();
             }
         });
 

@@ -5,8 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 
+import android.os.Message;
+import android.os.Messenger;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +21,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.dfz.myapplication.MUtils.SongLoader;
+import com.example.dfz.myapplication.MUtils.TimeFormat;
 import com.example.dfz.myapplication.Model.Song;
 import com.example.dfz.myapplication.Service.MusicService;
 
@@ -40,7 +44,28 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     android.app.FragmentManager fragmentManager;
     android.app.FragmentTransaction fragmentTransaction;
 
-    private int MSG_NEXT_SONG = 1;
+
+    public static boolean isVisible = true;
+
+    public static final int MSG_NEXT_SONG = 1;
+    private static Handler handler;
+    public static Messenger messenger;
+
+    private class MainHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            if (MainActivity.this.isDestroyed()) {
+                return;
+            }
+            switch (msg.what) {
+                case MSG_NEXT_SONG:
+                    updateFragment();
+                    break;
+                default:
+                    super.handleMessage(msg);
+            }
+        }
+    }
 
 
     @Override
@@ -49,6 +74,20 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         Intent intent2 = new Intent(this, MusicService.class);
         bindService(intent2, mConnection, Context.BIND_AUTO_CREATE);
         Log.d(TAG, "onCreate: bind service");
+        handler = new MainHandler();
+        messenger = new Messenger(handler);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        this.isVisible = false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.isVisible = true;
     }
 
     @Override
@@ -58,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
             unbindService(mConnection);
             mBound = false;
         }
+        handler.removeCallbacksAndMessages(null);
     }
 
     @Override
@@ -102,19 +142,19 @@ public class MainActivity extends AppCompatActivity implements android.support.v
                 LowerBar lowerBar = new LowerBar();
                 lowerBar.setArguments(bundle);
                 fragmentManager = getFragmentManager();
-                if (fragmentManager.getBackStackEntryCount()>0){
+                if (fragmentManager.getBackStackEntryCount() > 0) {
                     fragmentManager.popBackStack();
                 }
                 fragmentTransaction = fragmentManager.beginTransaction();
-                if(fragmentManager.getBackStackEntryCount()>0)
+                if (fragmentManager.getBackStackEntryCount() > 0)
                     fragmentManager.popBackStack();
                 fragmentTransaction.replace(R.id.lower_bar, lowerBar);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 
-                if (mBound){
+                if (mBound) {
                     MainActivity.this.myService.playSong(s);
-                }else {
+                } else {
                     Toast.makeText(MainActivity.this, "no service!", Toast.LENGTH_SHORT).show();
                 }
 
@@ -127,7 +167,6 @@ public class MainActivity extends AppCompatActivity implements android.support.v
 
         mRecyclerView.setAdapter(mAdapter);
     }
-
 
 
     @Override
@@ -151,8 +190,6 @@ public class MainActivity extends AppCompatActivity implements android.support.v
 
         return super.onOptionsItemSelected(item);
     }
-
-
 
 
     public void showPopup(View v) {
@@ -229,10 +266,9 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     @Override
     public void playOrPause() {
 
-        if(isPlaying) {
+        if (isPlaying) {
             myService.pause();
-        }
-        else {
+        } else {
             myService.start();
         }
         isPlaying = !isPlaying;
@@ -242,8 +278,15 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     public void nextSong() {
         myService.playNext();
 
+        updateFragment();
+
+
+        isPlaying = true;
+    }
+
+    private void updateFragment(){
         Song s = myService.nowPlaySong();
-        Toast.makeText(getBaseContext(), "now Song is"+s, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getBaseContext(), "now Song is" + s, Toast.LENGTH_SHORT).show();
 
         Bundle bundle = new Bundle();
         bundle.putString("title", s.getTitle());
@@ -259,9 +302,6 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         fragmentTransaction.replace(R.id.lower_bar, lowerBar);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-
-
-        isPlaying = true;
     }
 
     @Override
