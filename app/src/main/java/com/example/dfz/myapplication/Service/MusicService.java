@@ -148,7 +148,12 @@ public class MusicService extends Service {
 
                         Song song = songs.get(nowSongIndex);
                         durationMs = song.getDuration();
-                        Toast.makeText(getBaseContext(), "next song", Toast.LENGTH_SHORT).show();
+                        if (isPrevious){
+                            Toast.makeText(getBaseContext(), "previous song", Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText(getBaseContext(), "next song", Toast.LENGTH_SHORT).show();
+
+                        }
 
                         Message msgPlayerActivity = Message.obtain(null, PlayerActivity.NEXT_SONG, song);
 

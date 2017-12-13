@@ -4,12 +4,15 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 
 import android.os.Message;
 import android.os.Messenger;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -18,15 +21,25 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.dfz.myapplication.MUtils.SongLoader;
+import com.example.dfz.myapplication.MUtils.SongUtil;
 import com.example.dfz.myapplication.MUtils.TimeFormat;
 import com.example.dfz.myapplication.Model.Song;
 import com.example.dfz.myapplication.Service.MusicService;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.microedition.khronos.opengles.GL;
 
 public class MainActivity extends AppCompatActivity implements android.support.v7.widget.PopupMenu.OnMenuItemClickListener, LowerBar.LowerBarFragmentTouchListener, LowerBar.LowerBarPlayButtonClickListener, LowerBar.LowerBarNextButtonClickListener {
     private RecyclerView mRecyclerView;
@@ -50,6 +63,14 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     public static final int MSG_NEXT_SONG = 1;
     private static Handler handler;
     public static Messenger messenger;
+
+
+    private String[] mPlanetTitles;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
 
     private class MainHandler extends Handler {
         @Override
@@ -88,7 +109,9 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     protected void onResume() {
         super.onResume();
         this.isVisible = true;
-        updateFragment();
+        if (mBound) {
+            updateFragment();
+        }
     }
 
     @Override
@@ -106,6 +129,52 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
+        setSupportActionBar(toolbar);
+
+        mPlanetTitles = getResources().getStringArray(R.array.planets_array);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.drawer_list);
+
+        // Set the adapter for the list view
+        mDrawerList.setAdapter(new ArrayAdapter<>(this,
+                R.layout.drawer_list_item_text, mPlanetTitles));
+        // Set the list's click listener
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+        mTitle = mDrawerTitle = getTitle();
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                toolbar, R.string.drawer_open, R.string.drawer_close) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                getSupportActionBar().setTitle(mTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+//                ImageView drawerImage = findViewById(R.id.drawer_imageView);
+//                Glide.with(getBaseContext()).load(imageUri).into(drawerImage);
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                getSupportActionBar().setTitle(mDrawerTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+
+                Song s = myService.nowPlaySong();
+                ImageView drawerImage = findViewById(R.id.drawer_imageView);
+                Uri imageUri = SongUtil.getAlbumArt(s.getAlbumID());
+                Glide.with(getBaseContext()).load(imageUri).into(drawerImage);
+
+            }
+        };
+
+        // Set the drawer toggle as the DrawerListener
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+
 
         Intent intent = new Intent(this, MusicService.class);
 
@@ -113,8 +182,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         Log.d(TAG, "onCreate: startService");
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
 
 
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
@@ -285,7 +353,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         isPlaying = true;
     }
 
-    private void updateFragment(){
+    private void updateFragment() {
         Song s = myService.nowPlaySong();
         Toast.makeText(getBaseContext(), "now Song is" + s, Toast.LENGTH_SHORT).show();
 
@@ -308,5 +376,30 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     @Override
     public void onBackPressed() {
         moveTaskToBack(true);
+    }
+
+    private class DrawerItemClickListener implements android.widget.AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            selectItem(position);
+        }
+    }
+
+    private void selectItem(int position) {
+        switch (position){
+            case 0:
+                startActivity(new Intent(this, MainActivity.class));
+                break;
+            case 1:
+                Intent intent = new Intent(MainActivity.this, LastFMActivity.class);
+                startActivity(intent);
+            default:
+                break;
+        }
+    }
+
+    private void updateDrawer(){
+
+
     }
 }

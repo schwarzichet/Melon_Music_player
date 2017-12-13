@@ -7,4 +7,10 @@
     <string name="albumart">AlbumArt</string>
     <string name="song">song</string>
     <string name="singer">singer</string>
+    <string name="title_activity_navi_drawer">NaviDrawerActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="drawer_open">drawer_open</string>
+    <string name="drawer_close">drawer_cloese</string>
 </resources>

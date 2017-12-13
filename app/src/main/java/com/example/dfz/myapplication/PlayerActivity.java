@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +13,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -20,10 +22,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.dfz.myapplication.MUtils.SongUtil;
 import com.example.dfz.myapplication.MUtils.TimeFormat;
 import com.example.dfz.myapplication.Model.Song;
 import com.example.dfz.myapplication.Service.MusicService;
+
+import java.util.Collections;
 
 public class PlayerActivity extends AppCompatActivity {
 
@@ -46,13 +52,12 @@ public class PlayerActivity extends AppCompatActivity {
     private ImageButton moreOperation;
 
     private boolean isPlaying = false;
-    public static boolean isVisible = true;
+    public static boolean isVisible = false;
 
     private MusicService myService;
     boolean mBound = false;
 
     public static Handler handler;
-
 
 
     @Override
@@ -116,11 +121,21 @@ public class PlayerActivity extends AppCompatActivity {
         TimeFormat durationTimeFormat = new TimeFormat(song.getDuration());
         String durationString = durationTimeFormat.toTimeFormat();
         endTime.setText(durationString);
+
+//        updateColor(albumImageView.getDrawingCache());
+        Glide.with(this).asBitmap().load(imageUri).into(new SimpleTarget<Bitmap>(200, 200) {
+            @Override
+            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                createPaletteAsync(resource);
+            }
+        });
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(false);      // Disable the button
@@ -152,8 +167,16 @@ public class PlayerActivity extends AppCompatActivity {
         Uri imageUri = SongUtil.getAlbumArt(albumId);
         Glide.with(this).load(imageUri).into(albumImageView);
 
+        Glide.with(this).asBitmap().load(imageUri).into(new SimpleTarget<Bitmap>(200, 200) {
+            @Override
+            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                createPaletteAsync(resource);
+            }
+        });
+
         title.setText(currentSongName);
         artist.setText(currentSongBy);
+
 
         TimeFormat durationTimeFormat = new TimeFormat(durationMs);
         String duration = durationTimeFormat.toTimeFormat();
@@ -178,6 +201,8 @@ public class PlayerActivity extends AppCompatActivity {
             controlBarPlay.setImageResource(R.drawable.ic_pause);
         else
             controlBarPlay.setImageResource(R.drawable.ic_play_arrow);
+
+
 
     }
 
@@ -220,7 +245,7 @@ public class PlayerActivity extends AppCompatActivity {
             }
         });
 
-        previousSong.setOnClickListener(new View.OnClickListener(){
+        previousSong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 isPlaying = true;
@@ -277,5 +302,71 @@ public class PlayerActivity extends AppCompatActivity {
             mBound = false;
         }
     };
+
+    private void updateColor(Bitmap bitmap) {
+        // Generate the palette and get the vibrant swatch
+        // See the createPaletteSync() and checkVibrantSwatch() methods
+        // from the code snippets above
+        Palette p = createPaletteSync(bitmap);
+        Palette.Swatch vibrantSwatch = checkVibrantSwatch(p);
+
+        // Set the toolbar background and text colors
+
+//        progressBar.setBackgroundColor(vibrantSwatch.getRgb());
+//        title.setTitleTextColor(vibrantSwatch.getTitleTextColor());
+        title.setTextColor(vibrantSwatch.getRgb());
+        artist.setTextColor(vibrantSwatch.getRgb());
+
+
+    }
+
+
+    private Palette.Swatch checkVibrantSwatch(Palette palette) {
+        if (palette != null) {
+            if (palette.getVibrantSwatch() != null) {
+                return palette.getVibrantSwatch();
+            } else if (palette.getMutedSwatch() != null) {
+                return palette.getMutedSwatch();
+            } else if (palette.getDarkVibrantSwatch() != null) {
+                return palette.getDarkVibrantSwatch();
+            } else if (palette.getDarkMutedSwatch() != null) {
+                return palette.getDarkMutedSwatch();
+            } else if (palette.getLightVibrantSwatch() != null) {
+                return palette.getLightVibrantSwatch();
+            } else if (palette.getLightMutedSwatch() != null) {
+                return palette.getLightMutedSwatch();
+            }
+        }
+        return new Palette.Swatch(0, 0);
+    }
+
+    // Generate palette synchronously and return it
+    public Palette createPaletteSync(Bitmap bitmap) {
+        Palette p = Palette.from(bitmap).generate();
+        return p;
+    }
+
+    // Generate palette asynchronously and use it on a different
+    // thread using onGenerated()
+    public void createPaletteAsync(Bitmap bitmap) {
+        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+            public void onGenerated(Palette p) {
+                // Use generated instance
+                Palette.Swatch vibrantSwatch = checkVibrantSwatch(p);
+
+                // Set the toolbar background and text colors
+                if (vibrantSwatch == null){
+                    Log.d(TAG, "onGenerated: no virbrantSwatch");
+                }
+                Log.d(TAG, "onGenerated: "+vibrantSwatch.getRgb());
+                progressBar.getProgressDrawable().setColorFilter(
+                        vibrantSwatch.getRgb(), android.graphics.PorterDuff.Mode.SRC_IN);
+//                progressBar.setProgressTintList(vibrantSwatch.getRgb());
+                progressBar.setDrawingCacheBackgroundColor(vibrantSwatch.getRgb());
+                title.setTextColor(vibrantSwatch.getRgb());
+                artist.setTextColor(vibrantSwatch.getRgb());
+            }
+        });
+    }
 
 }
