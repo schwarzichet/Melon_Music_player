@@ -2,6 +2,8 @@ package com.example.dfz.myapplication.Model;
 
 import android.content.ContentUris;
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.Objects;
 
@@ -10,23 +12,23 @@ import java.util.Objects;
  * Created by DFZ on 2017/10/31.
  */
 
-public class Song {
-    final private int _id;
+public class Song implements Parcelable{
+    public static final Song EMPTY_SONG = new Song(-1, "", -1, -1, -1, "", "", -1, "", -1);
+    final int _id;
 
-    final private String data;
+    final String data;
 
-    final private String title;
+    final String title;
 
-    final private String artist;
-    final private int artistID;
+    final String artist;
+    final int artistID;
 
-    final private String album;
-    final private int albumID;
+    final String album;
+    final int albumID;
 
-    final private int trackNumber;
-    final private int year;
-    final private long duration;
-
+    final int trackNumber;
+    final int year;
+    final long duration;
 
 
     public Song(int id, String title, int trackNumber, int year, long duration, String data,
@@ -97,7 +99,49 @@ public class Song {
 
     @Override
     public boolean equals(Object obj) {
-        Song s = (Song)obj;
+        Song s = (Song) obj;
         return this.getData().equals(s.getData());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    protected Song(Parcel in) {
+        this._id = in.readInt();
+        this.title = in.readString();
+        this.trackNumber = in.readInt();
+        this.year = in.readInt();
+        this.duration = in.readLong();
+        this.data = in.readString();
+        this.albumID = in.readInt();
+        this.album = in.readString();
+        this.artistID = in.readInt();
+        this.artist = in.readString();
+    }
+
+    public static final Creator<Song> CREATOR = new Creator<Song>() {
+        public Song createFromParcel(Parcel source) {
+            return new Song(source);
+        }
+
+        public Song[] newArray(int size) {
+            return new Song[size];
+        }
+    };
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this._id);
+        dest.writeString(this.title);
+        dest.writeInt(this.trackNumber);
+        dest.writeInt(this.year);
+        dest.writeLong(this.duration);
+        dest.writeString(this.data);
+        dest.writeInt(this.albumID);
+        dest.writeString(this.album);
+        dest.writeInt(this.artistID);
+        dest.writeString(this.artist);
     }
 }

@@ -76,7 +76,7 @@ public class SongLoader {
 
 
     @Nullable
-    private static Cursor makeSongCursor(@NonNull final Context context, @Nullable String selection, String[] selectionValues, final String sortOrder) {
+    static Cursor makeSongCursor(@NonNull final Context context, @Nullable String selection, String[] selectionValues, final String sortOrder) {
         if (selection != null && !selection.trim().equals("")) {
             selection = BASE_SELECTION + " AND " + selection;
         } else {

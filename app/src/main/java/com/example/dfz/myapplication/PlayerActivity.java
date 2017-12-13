@@ -66,6 +66,7 @@ public class PlayerActivity extends AppCompatActivity {
     public static Handler handler;
 
 
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -108,6 +109,8 @@ public class PlayerActivity extends AppCompatActivity {
                     break;
                 case NEXT_SONG:
                     Song song = (Song) msg.obj;
+                    Log.d(TAG, "handleMessage: nextsong" + song);
+
                     updateView(song);
                     break;
                 default:
@@ -215,7 +218,7 @@ public class PlayerActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-
+        isVisible = true;
         Intent intent = new Intent(this, MusicService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 

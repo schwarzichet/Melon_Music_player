@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         Log.d(TAG, "onCreate: bind service");
         handler = new MainHandler();
         messenger = new Messenger(handler);
+
     }
 
     @Override
@@ -110,7 +111,18 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         super.onResume();
         this.isVisible = true;
         if (mBound) {
+            Log.d(TAG, "onResume: yes bound");
             updateFragment();
+        }else {
+            Log.d(TAG, "onResume: oh, not bound?");
+
+//            Intent intent2 = new Intent(this, MusicService.class);
+//            bindService(intent2, mConnection, Context.BIND_AUTO_CREATE);
+//            Log.d(TAG, "onCreate: bind service");
+//            handler = new MainHandler();
+//            messenger = new Messenger(handler);
+
+//            updateFragment();
         }
     }
 
@@ -119,7 +131,6 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         super.onStop();
         if (mBound) {
             unbindService(mConnection);
-            mBound = false;
         }
         handler.removeCallbacksAndMessages(null);
     }

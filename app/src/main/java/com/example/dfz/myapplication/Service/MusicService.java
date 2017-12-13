@@ -145,6 +145,10 @@ public class MusicService extends Service {
                     Log.d(TAG, "onPlayerStateChanged: 2333" + playbackState);
                     if (playbackState == Player.STATE_ENDED || isNext || isPrevious) {
 
+                        if (!isNext&&!isPrevious){
+                            nowSongIndex++;
+                            player.prepare(getMediaSource(songs.get(nowSongIndex).getData()), true, false);
+                        }
 
                         Song song = songs.get(nowSongIndex);
                         durationMs = song.getDuration();
@@ -164,7 +168,10 @@ public class MusicService extends Service {
                                 MainActivity.messenger.send(msgLowerBar);
                             }
                             if (PlayerActivity.isVisible) {
+                                Log.d(TAG, "onPlayerStateChanged: have PlayerAcitivity");
                                 PlayerActivity.messenger.send(msgPlayerActivity);
+                            }else {
+                                Log.d(TAG, "onPlayerStateChanged: no PlayerAcitivity");
                             }
                         } catch (RemoteException e) {
                             e.printStackTrace();
