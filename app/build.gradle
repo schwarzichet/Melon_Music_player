@@ -36,12 +36,13 @@ dependencies {
     compile 'com.google.android.exoplayer:exoplayer:r2.5.4'
     compile project(':exoplayer-extension-flac')
 
-
     compile 'com.github.bumptech.glide:glide:4.3.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.3.1'
 
     implementation 'com.android.support:palette-v7:26.1.0'
 
     compile 'com.github.vpaliyX:Last.fm-API:v1.2.0'
+
+    compile 'com.jpardogo.materialtabstrip:library:1.1.1'
 
 }

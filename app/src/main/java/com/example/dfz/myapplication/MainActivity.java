@@ -231,6 +231,8 @@ public class MainActivity extends AppCompatActivity implements android.support.v
 
             @Override
             public void onItemLongClick(View view, int position) {
+                Intent intent = new Intent(MainActivity.this, FragmentPagerSupport.class);
+                startActivity(intent);
             }
         });
 

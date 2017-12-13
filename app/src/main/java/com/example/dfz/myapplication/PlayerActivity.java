@@ -12,9 +12,13 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -56,6 +60,8 @@ public class PlayerActivity extends AppCompatActivity {
 
     private MusicService myService;
     boolean mBound = false;
+
+    private GestureDetectorCompat mDetector;
 
     public static Handler handler;
 
@@ -177,7 +183,6 @@ public class PlayerActivity extends AppCompatActivity {
         title.setText(currentSongName);
         artist.setText(currentSongBy);
 
-
         TimeFormat durationTimeFormat = new TimeFormat(durationMs);
         String duration = durationTimeFormat.toTimeFormat();
 
@@ -202,8 +207,7 @@ public class PlayerActivity extends AppCompatActivity {
         else
             controlBarPlay.setImageResource(R.drawable.ic_play_arrow);
 
-
-
+        mDetector = new GestureDetectorCompat(this, new MyGestureListener());
     }
 
 
@@ -227,7 +231,8 @@ public class PlayerActivity extends AppCompatActivity {
                 if (isPlaying) {
                     myService.pause();
                     controlBarPlay.setImageResource(R.drawable.ic_play_arrow);
-                } else {
+                }
+                else {
                     myService.start();
                     controlBarPlay.setImageResource(R.drawable.ic_pause);
                 }
@@ -274,6 +279,58 @@ public class PlayerActivity extends AppCompatActivity {
             }
         });
 
+//        mDetector = new GestureDetectorCompat(this, new MyGestureListener());
+
+//        View view = findViewById(R.id.player_layout);
+//        view.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                return mDetector.onTouchEvent(motionEvent);
+//            }
+//        });
+
+    }
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+
+        return mDetector.onTouchEvent(event);
+    }
+
+    class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onDown(MotionEvent event) {
+            Log.d(TAG,"onDown: " + event.toString());
+            return true;
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2,
+                               float velocityX, float velocityY) {
+            Log.d(TAG, "onFling: " + e1.toString() + e2.toString());
+            if(velocityY < 0 && Math.abs(velocityY) > Math.abs(velocityX))
+            {
+                finish();
+            }
+            if(Math.abs(velocityY) < Math.abs(velocityX))
+            {
+                if(velocityX < 0)
+                {
+                    isPlaying = true;
+                    controlBarPlay.setImageResource(R.drawable.ic_pause);
+                    myService.playNext();
+                }
+                else {
+                    isPlaying = true;
+                    controlBarPlay.setImageResource(R.drawable.ic_pause);
+                    myService.playPrevious();
+                }
+            }
+
+            return true;
+        }
     }
 
     @Override
@@ -285,7 +342,6 @@ public class PlayerActivity extends AppCompatActivity {
             mBound = false;
         }
     }
-
 
     private ServiceConnection mConnection = new ServiceConnection() {
 
