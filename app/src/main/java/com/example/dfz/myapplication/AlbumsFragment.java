@@ -1,16 +1,19 @@
 package com.example.dfz.myapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.dfz.myapplication.MUtils.AlbumLoader;
 import com.example.dfz.myapplication.Model.Album;
+import com.example.dfz.myapplication.Model.Song;
 
 import java.util.ArrayList;
 
@@ -24,8 +27,10 @@ public class AlbumsFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 3;
-    private OnFragmentInteractionListener mListener;
 
+    private ArrayList<Album> mAlbums;
+
+    private OnFragmentInteractionListener mListener;
     private MyAlbumAdapter myAlbumAdapter;
 
     /**
@@ -63,12 +68,24 @@ public class AlbumsFragment extends Fragment {
         Context context = view.getContext();
         RecyclerView recyclerView = (RecyclerView) view;
         recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-        ArrayList<Album> mAlbums = AlbumLoader.getAllAlbums(getContext());
+
+        mAlbums = AlbumLoader.getAllAlbums(getContext());
         myAlbumAdapter = new MyAlbumAdapter(getActivity(), mAlbums);
         myAlbumAdapter.setOnItemClickListener(new MyAlbumAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int pos) {
-
+//                Bundle bundle = new Bundle();
+//                bundle.putInt("position", pos);
+                Album album = mAlbums.get(pos);
+//                bundle.putString("title", album.getTitle());
+//                bundle.putString("artistName", album.getArtistName());
+//                bundle.putInt("albumYear", album.getYear());
+//                bundle.putLong("songCount", album.getSongCount());
+                Log.d("go to", "success!");
+                Intent intent = new Intent(getActivity(), AlbumActivity.class);
+                intent.putExtra("albumId", album.getId());
+                Log.d("go to album activity", "success!");
+                startActivity(intent);
             }
         });
         recyclerView.setAdapter(myAlbumAdapter);
