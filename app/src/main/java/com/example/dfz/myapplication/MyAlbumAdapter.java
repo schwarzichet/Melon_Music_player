@@ -1,5 +1,6 @@
 package com.example.dfz.myapplication;
 
+import android.app.Activity;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -11,23 +12,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.dfz.myapplication.AlbumItemFragment.OnListFragmentInteractionListener;
 import com.example.dfz.myapplication.Model.Album;
-import com.example.dfz.myapplication.dummy.DummyContent.DummyItem;
 
 import java.util.ArrayList;
-import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
+
 public class MyAlbumAdapter extends RecyclerView.Adapter<MyAlbumAdapter.ViewHolder> {
     private static final String TAG = "MyAlbumAdapter";
 
     public final ArrayList<Album> mAlbums;
-    private final OnListFragmentInteractionListener mListener;
+    //private final OnListFragmentInteractionListener mListener;
+    private Activity activity;
+
+    private MyAlbumAdapter.OnItemClickListener onItemClickListener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView mAlbumArt;
@@ -46,9 +43,14 @@ public class MyAlbumAdapter extends RecyclerView.Adapter<MyAlbumAdapter.ViewHold
         }
     }
 
-    public MyAlbumAdapter(ArrayList<Album> items, OnListFragmentInteractionListener listener) {
-        mAlbums = items;
-        mListener = listener;
+//    public MyAlbumAdapter(ArrayList<Album> items, OnListFragmentInteractionListener listener) {
+//        mAlbums = items;
+//        mListener = listener;
+//    }
+
+    public MyAlbumAdapter(Activity activity, ArrayList<Album> mAlbums) {
+        this.mAlbums = mAlbums;
+        this.activity = activity;
     }
 
     @Override
@@ -60,35 +62,19 @@ public class MyAlbumAdapter extends RecyclerView.Adapter<MyAlbumAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(MyAlbumAdapter.ViewHolder holder, int position) {
-//        holder.mAlbumName.setText(mAlbums.get(position).getTitle());
-//        holder.mAlbumArt.setImageResource(mAlbums.get(position).get);
-//
-//
-//        Uri imageUri = mDataset.get(position).getAlbumArt();
-//        Log.d(TAG, "onBindViewHolder: " + imageUri);
-//        Glide.with(activity).load(imageUri).into(holder.mAlbumImageView);
-//
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(final View v) {
-//                if (onItemClickListener != null) {
-//                    int pos = holder.getLayoutPosition();
-//                    onItemClickListener.onItemClick(holder.itemView, pos);
-//                }
-//            }
-//        });
-//
-//        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                if (onItemClickListener != null) {
-//                    int pos = holder.getLayoutPosition();
-//                    onItemClickListener.onItemLongClick(holder.itemView, pos);
-//                }
-//                return true;
-//            }
-//        });
-//
+        holder.mAlbumName.setText(mAlbums.get(position).getTitle());
+        Uri imageUri = mAlbums.get(position).safeGetFirstSong().getAlbumArt();
+        Glide.with(activity).load(imageUri).into(holder.mAlbumArt);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (onItemClickListener != null) {
+                    int pos = holder.getLayoutPosition();
+                    onItemClickListener.onItemClick(holder.itemView, pos);
+                }
+            }
+        });
     }
 //
 //    @Override
@@ -109,9 +95,18 @@ public class MyAlbumAdapter extends RecyclerView.Adapter<MyAlbumAdapter.ViewHold
 //        });
 //    }
 //
-//    @Override
+    @Override
     public int getItemCount() {
         return mAlbums.size();
+    }
+
+
+    public interface OnItemClickListener {
+        void onItemClick(View itemView, int pos);
+    }
+
+    public void setOnItemClickListener(MyAlbumAdapter.OnItemClickListener listener) {
+        this.onItemClickListener = listener;
     }
 
 }

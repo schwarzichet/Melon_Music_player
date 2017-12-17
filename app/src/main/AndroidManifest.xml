@@ -39,7 +39,11 @@
 
         <service android:name=".Service.MusicService" />
 
-        <activity android:name=".FragmentPagerSupport"></activity>
+        <activity
+            android:name=".FragmentPagerSupport"
+            android:theme="@style/AppTheme.transStatus">
+
+        </activity>
     </application>
 
 </manifest>
