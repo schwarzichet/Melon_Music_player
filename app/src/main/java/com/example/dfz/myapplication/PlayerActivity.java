@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,6 +29,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.example.dfz.myapplication.MUtils.ColorUtils;
 import com.example.dfz.myapplication.MUtils.SongUtil;
 import com.example.dfz.myapplication.MUtils.TimeFormat;
 import com.example.dfz.myapplication.Model.Song;
@@ -64,7 +66,6 @@ public class PlayerActivity extends AppCompatActivity {
     private GestureDetectorCompat mDetector;
 
     public static Handler handler;
-
 
 
     @Override
@@ -234,8 +235,7 @@ public class PlayerActivity extends AppCompatActivity {
                 if (isPlaying) {
                     myService.pause();
                     controlBarPlay.setImageResource(R.drawable.ic_play_arrow);
-                }
-                else {
+                } else {
                     myService.start();
                     controlBarPlay.setImageResource(R.drawable.ic_pause);
                 }
@@ -296,7 +296,7 @@ public class PlayerActivity extends AppCompatActivity {
 
 
     @Override
-    public boolean onTouchEvent(MotionEvent event){
+    public boolean onTouchEvent(MotionEvent event) {
 
         return mDetector.onTouchEvent(event);
     }
@@ -305,7 +305,7 @@ public class PlayerActivity extends AppCompatActivity {
 
         @Override
         public boolean onDown(MotionEvent event) {
-            Log.d(TAG,"onDown: " + event.toString());
+            Log.d(TAG, "onDown: " + event.toString());
             return true;
         }
 
@@ -313,19 +313,15 @@ public class PlayerActivity extends AppCompatActivity {
         public boolean onFling(MotionEvent e1, MotionEvent e2,
                                float velocityX, float velocityY) {
             Log.d(TAG, "onFling: " + e1.toString() + e2.toString());
-            if(velocityY < 0 && Math.abs(velocityY) > Math.abs(velocityX))
-            {
+            if (velocityY < 0 && Math.abs(velocityY) > Math.abs(velocityX)) {
                 finish();
             }
-            if(Math.abs(velocityY) < Math.abs(velocityX))
-            {
-                if(velocityX < 0)
-                {
+            if (Math.abs(velocityY) < Math.abs(velocityX)) {
+                if (velocityX < 0) {
                     isPlaying = true;
                     controlBarPlay.setImageResource(R.drawable.ic_pause);
                     myService.playNext();
-                }
-                else {
+                } else {
                     isPlaying = true;
                     controlBarPlay.setImageResource(R.drawable.ic_pause);
                     myService.playPrevious();
@@ -414,16 +410,34 @@ public class PlayerActivity extends AppCompatActivity {
                 Palette.Swatch vibrantSwatch = checkVibrantSwatch(p);
 
                 // Set the toolbar background and text colors
-                if (vibrantSwatch == null){
+                if (vibrantSwatch == null) {
                     Log.d(TAG, "onGenerated: no virbrantSwatch");
                 }
-                Log.d(TAG, "onGenerated: "+vibrantSwatch.getRgb());
+                Log.d(TAG, "onGenerated: " + vibrantSwatch.getRgb());
                 progressBar.getProgressDrawable().setColorFilter(
                         vibrantSwatch.getRgb(), android.graphics.PorterDuff.Mode.SRC_IN);
 //                progressBar.setProgressTintList(vibrantSwatch.getRgb());
-                progressBar.setDrawingCacheBackgroundColor(vibrantSwatch.getRgb());
-                title.setTextColor(vibrantSwatch.getRgb());
-                artist.setTextColor(vibrantSwatch.getRgb());
+
+                int rgb = vibrantSwatch.getRgb();
+
+//                float[] hsv = new float[3];
+//                int color = Color.alpha(rgb);
+//                Color.colorToHSV(color, hsv);
+//                hsv[2] *= 0.8f; // value component
+                int color = ColorUtils.darken(rgb, 0.3);
+                View view = findViewById(R.id.player_layout);
+                view.setBackgroundColor(color);
+
+                progressBar.setDrawingCacheBackgroundColor(Color.WHITE);
+                title.setTextColor(Color.WHITE);
+                artist.setTextColor(Color.WHITE);
+                currentTime.setTextColor(Color.WHITE);
+                endTime.setTextColor(Color.WHITE);
+                controlBarPlay.setColorFilter(Color.WHITE);
+                previousSong.setColorFilter(Color.WHITE);
+                nextSong.setColorFilter(Color.WHITE);
+                switchMode.setColorFilter(Color.WHITE);
+                moreOperation.setColorFilter(Color.WHITE);
             }
         });
     }

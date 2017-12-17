@@ -99,7 +99,9 @@ public class MySongAdapter extends RecyclerView.Adapter<MySongAdapter.ViewHolder
             public void onClick(final View v) {
                 if (onItemClickListener != null) {
                     int pos = holder.getLayoutPosition();
+
                     onItemClickListener.onItemClick(holder.itemView, pos);
+                }else {
                 }
             }
         });

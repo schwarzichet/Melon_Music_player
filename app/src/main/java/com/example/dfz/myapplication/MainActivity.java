@@ -404,7 +404,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
                 startActivity(new Intent(this, MainActivity.class));
                 break;
             case 1:
-                Intent intent = new Intent(MainActivity.this, LastFMActivity.class);
+                Intent intent = new Intent(MainActivity.this, LastFMLoginActivity.class);
                 startActivity(intent);
             default:
                 break;
