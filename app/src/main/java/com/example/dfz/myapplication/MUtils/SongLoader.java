@@ -57,6 +57,12 @@ public class SongLoader {
     }
 
     @NonNull
+    public static Song getSong(final Context context, int id){
+        Cursor cursor = makeSongCursor(context, MediaStore.Audio.Media._ID+"="+id, null, "TITLE ASC");
+        return getSong(cursor);
+    }
+
+    @NonNull
     private static Song getSongFromCursorImpl(@NonNull Cursor cursor) {
         final int id = cursor.getInt(0);
         final String title = cursor.getString(1);
