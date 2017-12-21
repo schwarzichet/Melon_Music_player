@@ -33,13 +33,16 @@
                 android:value=".MainActivity" />
         </activity>
         <activity android:name=".Playlist" />
-
-        <activity android:name=".LastFMActivity"
-            android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".LastFMActivity"
+            android:parentActivityName=".MainActivity" />
 
         <service android:name=".Service.MusicService" />
 
-        <activity android:name=".FragmentPagerSupport"></activity>
+        <activity
+            android:name=".FragmentPagerSupport"
+            android:theme="@style/AppTheme.transStatus"></activity>
+        <activity android:name=".AlbumActivity"></activity>
     </application>
 
 </manifest>

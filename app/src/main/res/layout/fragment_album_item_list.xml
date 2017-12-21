@@ -9,5 +9,5 @@
     android:layout_marginLeft="6dp"
     android:layout_marginRight="6dp"
     app:layoutManager="GridLayoutManager"
-    tools:context="com.example.dfz.myapplication.AlbumItemFragment"
+    tools:context="com.example.dfz.myapplication.AlbumsFragment"
     tools:listitem="@layout/fragment_album_item" />
