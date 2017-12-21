@@ -31,7 +31,7 @@ public class AlbumsFragment extends Fragment {
     private ArrayList<Album> mAlbums;
 
     private OnFragmentInteractionListener mListener;
-    private MyAlbumAdapter myAlbumAdapter;
+    private MyAlbumAdapter mAlbumAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -70,8 +70,8 @@ public class AlbumsFragment extends Fragment {
         recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
 
         mAlbums = AlbumLoader.getAllAlbums(getContext());
-        myAlbumAdapter = new MyAlbumAdapter(getActivity(), mAlbums);
-        myAlbumAdapter.setOnItemClickListener(new MyAlbumAdapter.OnItemClickListener() {
+        mAlbumAdapter = new MyAlbumAdapter(getActivity(), mAlbums);
+        mAlbumAdapter.setOnItemClickListener(new MyAlbumAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int pos) {
 //                Bundle bundle = new Bundle();
@@ -88,7 +88,7 @@ public class AlbumsFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        recyclerView.setAdapter(myAlbumAdapter);
+        recyclerView.setAdapter(mAlbumAdapter);
         return view;
     }
 

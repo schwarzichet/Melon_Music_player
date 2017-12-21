@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -106,9 +107,10 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
 
                 LowerBar lowerBar = new LowerBar();
                 lowerBar.setArguments(bundle);
-                fragmentManager = getFragmentManager();
-                fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.lower_bar, lowerBar);
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentManager.popBackStack();
+                fragmentTransaction.replace(R.id.lowerbar_layout, lowerBar);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 
@@ -190,10 +192,10 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
 
         LowerBar lowerBar = new LowerBar();
         lowerBar.setArguments(bundle);
-        fragmentManager = getFragmentManager();
-        fragmentTransaction = fragmentManager.beginTransaction();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentManager.popBackStack();
-        fragmentTransaction.replace(R.id.lower_bar, lowerBar);
+        fragmentTransaction.replace(R.id.lowerbar_layout, lowerBar);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }

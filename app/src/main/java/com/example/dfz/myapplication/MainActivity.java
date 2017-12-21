@@ -1,5 +1,6 @@
 package com.example.dfz.myapplication;
 
+import android.app.FragmentTransaction;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -11,10 +12,13 @@ import android.os.IBinder;
 
 import android.os.Message;
 import android.os.Messenger;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuInflater;
@@ -25,38 +29,33 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.bumptech.glide.Glide;
 import com.example.dfz.myapplication.MUtils.SongLoader;
 import com.example.dfz.myapplication.MUtils.SongUtil;
-import com.example.dfz.myapplication.MUtils.TimeFormat;
 import com.example.dfz.myapplication.Model.Song;
 import com.example.dfz.myapplication.Service.MusicService;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
-import javax.microedition.khronos.opengles.GL;
+public class MainActivity extends AppCompatActivity implements AllSongsFragment.OnItemClick, android.support.v7.widget.PopupMenu.OnMenuItemClickListener, LowerBar.LowerBarFragmentTouchListener, LowerBar.LowerBarPlayButtonClickListener, LowerBar.LowerBarNextButtonClickListener {
+//    private RecyclerView mRecyclerView;
+//    private MySongAdapter mAdapter;
+//    private ArrayList<Song> songs = new ArrayList<>();
 
-public class MainActivity extends AppCompatActivity implements android.support.v7.widget.PopupMenu.OnMenuItemClickListener, LowerBar.LowerBarFragmentTouchListener, LowerBar.LowerBarPlayButtonClickListener, LowerBar.LowerBarNextButtonClickListener {
-    private RecyclerView mRecyclerView;
-    private MySongAdapter mAdapter;
-    private ArrayList<Song> songs = new ArrayList<>();
+    static final int NUM_ITEMS = 4;
+    MyAdapter mAdapter;
+    ViewPager mPager;
 
     private long currentTimeMs = 0;
     private boolean isPlaying = false;
 
     private String TAG = "MainActivity";
 
-    private MusicService myService;
-    boolean mBound = false;
-
-    android.app.FragmentManager fragmentManager;
-    android.app.FragmentTransaction fragmentTransaction;
-
+    public MusicService myService;
+    private boolean mBound = false;
 
     public static boolean isVisible = true;
 
@@ -71,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
+
 
     private class MainHandler extends Handler {
         @Override
@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements android.support.v
             }
         }
     }
-
 
     @Override
     protected void onStart() {
@@ -185,71 +184,64 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+        mAdapter = new MyAdapter(getSupportFragmentManager());
 
+        mPager = findViewById(R.id.view_pager);
+        mPager.setAdapter(mAdapter);
+
+        PagerSlidingTabStrip tabs = findViewById(R.id.tabs);
+        tabs.setViewPager(mPager);
 
         Intent intent = new Intent(this, MusicService.class);
 
         startService(intent);
         Log.d(TAG, "onCreate: startService");
 
-
-
-
-
-        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-        mRecyclerView.setHasFixedSize(true);
-
-
-        Log.d(TAG, "onCreate: i am goimg to load songs");
-
-        songs = SongLoader.loadSongs(MainActivity.this);
-
-        Log.d(TAG, "onCreate: song number is " + songs.size());
-        mAdapter = new MySongAdapter(MainActivity.this, songs);
-        mAdapter.setOnItemClickListener(new MySongAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-//                nowPosition = position;
-
-                isPlaying = true;
-                Bundle bundle = new Bundle();
-                Song s = songs.get(position);
-                bundle.putString("title", s.getTitle());
-                bundle.putString("artist", s.getArtist());
-                bundle.putInt("albumId", s.getAlbumID());
-                bundle.putLong("duration", s.getDuration());
-
-                LowerBar lowerBar = new LowerBar();
-                lowerBar.setArguments(bundle);
-                fragmentManager = getFragmentManager();
-                if (fragmentManager.getBackStackEntryCount() > 0) {
-                    fragmentManager.popBackStack();
-                }
-                fragmentTransaction = fragmentManager.beginTransaction();
-                if (fragmentManager.getBackStackEntryCount() > 0)
-                    fragmentManager.popBackStack();
-                fragmentTransaction.replace(R.id.lower_bar, lowerBar);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-
-                if (mBound) {
-                    MainActivity.this.myService.playSong(s);
-                } else {
-                    Toast.makeText(MainActivity.this, "no service!", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-
-            @Override
-            public void onItemLongClick(View view, int position) {
-                Intent intent = new Intent(MainActivity.this, FragmentPagerSupport.class);
-                startActivity(intent);
-            }
-        });
-
-        mRecyclerView.setAdapter(mAdapter);
     }
 
+    public class MyAdapter extends FragmentPagerAdapter {
+
+        private final String mTitles[] = {"AllSongs", "Albums", "Artists", "Playlists"};
+
+        public MyAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mTitles[position];
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            Fragment newPage;
+            Log.d("pos", position+"");
+            switch(position){
+                case 0:
+                    newPage = new AllSongsFragment();
+                    Log.d("all songs", "show");
+                    break;
+                case 1:
+                    newPage = new AlbumsFragment();
+                    break;
+                case 2:
+                    newPage = new ArtistsFragment();
+                    break;
+                case 3:
+                    newPage = new PlaylistsFragment();
+                    break;
+                default:
+                    newPage = new AllSongsFragment();
+            }
+            return newPage;
+        }
+
+        @Override
+        public int getCount() {
+            return NUM_ITEMS;
+        }
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -359,14 +351,12 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     @Override
     public void nextSong() {
         myService.playNext();
-
         updateFragment();
-
-
         isPlaying = true;
     }
 
     private void updateFragment() {
+
         Song s = myService.nowPlaySong();
         Toast.makeText(getBaseContext(), "now Song is" + s, Toast.LENGTH_SHORT).show();
 
@@ -378,10 +368,10 @@ public class MainActivity extends AppCompatActivity implements android.support.v
 
         LowerBar lowerBar = new LowerBar();
         lowerBar.setArguments(bundle);
-        fragmentManager = getFragmentManager();
-        fragmentTransaction = fragmentManager.beginTransaction();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentManager.popBackStack();
-        fragmentTransaction.replace(R.id.lower_bar, lowerBar);
+        fragmentTransaction.replace(R.id.lowerbar_layout, lowerBar);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
@@ -409,6 +399,13 @@ public class MainActivity extends AppCompatActivity implements android.support.v
             default:
                 break;
         }
+    }
+
+    @Override
+    public void playThisSong(Bundle bundle) {
+        int songId = bundle.getInt("songId");
+        Song song = SongLoader.getSong(this, songId);
+        myService.playSong(song);
     }
 
     private void updateDrawer(){

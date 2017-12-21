@@ -9,9 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:clickable="true"
-        android:focusable="true">
+        android:orientation="vertical">
 
         <com.example.dfz.myapplication.Model.SquareImageView
             android:id="@+id/album_art"

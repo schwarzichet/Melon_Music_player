@@ -55,9 +55,9 @@ public class MySongAdapter extends RecyclerView.Adapter<MySongAdapter.ViewHolder
                     Log.d(TAG, "Element " + getAdapterPosition() + " clicked.");
                 }
             });
-            mSongTitleTextView = (TextView) v.findViewById(R.id.SongTitle);
-            mArtistTextView = (TextView) v.findViewById(R.id.ArtistName);
-            mAlbumImageView = (ImageView) v.findViewById(R.id.albumImage);
+            mSongTitleTextView = v.findViewById(R.id.SongTitle);
+            mArtistTextView = v.findViewById(R.id.ArtistName);
+            mAlbumImageView = v.findViewById(R.id.albumImage);
             //mMoreButton = (ImageButton)v.findViewById(R.id.buttonMore);
         }
     }
@@ -76,7 +76,6 @@ public class MySongAdapter extends RecyclerView.Adapter<MySongAdapter.ViewHolder
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.song_item_view, parent, false);
 
-
         // set the view's size, margins, paddings and layout parameters
         return new ViewHolder((CardView) v);
     }
@@ -88,7 +87,6 @@ public class MySongAdapter extends RecyclerView.Adapter<MySongAdapter.ViewHolder
         // - replace the contents of the view with that element
         holder.mSongTitleTextView.setText(mDataset.get(position).getTitle());
         holder.mArtistTextView.setText(mDataset.get(position).getArtist());
-
 
         Uri imageUri = mDataset.get(position).getAlbumArt();
         Log.d(TAG, "onBindViewHolder: " + imageUri);
