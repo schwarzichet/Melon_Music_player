@@ -32,12 +32,7 @@ public class MyAlbumAdapter extends RecyclerView.Adapter<MyAlbumAdapter.ViewHold
 
         public ViewHolder(CardView v) {
             super(v);
-            v.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG, "Element " + getAdapterPosition() + " clicked.");
-                }
-            });
+            v.setOnClickListener(v1 -> Log.d(TAG, "Element " + getAdapterPosition() + " clicked."));
             mAlbumArt = v.findViewById(R.id.album_art);
             mAlbumName = v.findViewById(R.id.album_name);
         }

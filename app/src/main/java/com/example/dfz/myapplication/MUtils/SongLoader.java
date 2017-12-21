@@ -18,7 +18,13 @@ import java.util.ArrayList;
 
 public class SongLoader {
     private static final String BASE_SELECTION = MediaStore.Audio.AudioColumns.IS_MUSIC + "=1" + " AND " + MediaStore.Audio.AudioColumns.TITLE + " != ''";
-    private static final String TAG = "songloader";
+    private static final String TAG = "SongLoader";
+
+    @NonNull
+    public static Song getSong(@NonNull final Context context, final int queryId) {
+        Cursor cursor = makeSongCursor(context, MediaStore.Audio.AudioColumns._ID + "=?", new String[]{String.valueOf(queryId)}, "TITLE ASC");
+        return getSong(cursor);
+    }
 
     public static ArrayList<Song> loadSongs(final Context context) {
         Cursor cursor = makeSongCursor(context, null, null, "TITLE ASC");
@@ -55,12 +61,7 @@ public class SongLoader {
         Log.d(TAG, "getSong: ");
         return song;
     }
-
-    @NonNull
-    public static Song getSong(final Context context, int id){
-        Cursor cursor = makeSongCursor(context, MediaStore.Audio.Media._ID+"="+id, null, "TITLE ASC");
-        return getSong(cursor);
-    }
+    
 
     @NonNull
     private static Song getSongFromCursorImpl(@NonNull Cursor cursor) {

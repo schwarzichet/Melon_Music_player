@@ -25,4 +25,5 @@
         completions."
     </string>
     <string name="username">username</string>
+    <string name="lastfm_user_image">LastFM User Image</string>
 </resources>

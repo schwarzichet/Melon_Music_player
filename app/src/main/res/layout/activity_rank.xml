@@ -6,4 +6,9 @@
     android:layout_height="match_parent"
     tools:context="com.example.dfz.myapplication.RankActivity">
 
+    <android.support.v7.widget.RecyclerView
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        android:id="@+id/rank_list"
+        android:layout_width="0dp"
+        android:layout_height="match_parent" />
 </android.support.constraint.ConstraintLayout>

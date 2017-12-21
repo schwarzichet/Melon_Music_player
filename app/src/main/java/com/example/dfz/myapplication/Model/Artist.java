@@ -1,7 +1,5 @@
 package com.example.dfz.myapplication.Model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -10,7 +8,7 @@ import java.util.ArrayList;
  * Created by DFZ on 2017/12/21.
  */
 
-public class Aritist {
+public class Artist {
     public final ArrayList<Album> albums;
 
     public Artist(ArrayList<Album> albums) {
@@ -77,30 +75,4 @@ public class Aritist {
                 '}';
     }
 
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeTypedList(this.albums);
-    }
-
-    protected Artist(Parcel in) {
-        this.albums = in.createTypedArrayList(Album.CREATOR);
-    }
-
-    public static final Parcelable.Creator<Artist> CREATOR = new Parcelable.Creator<Artist>() {
-        @Override
-        public Artist createFromParcel(Parcel source) {
-            return new Artist(source);
-        }
-
-        @Override
-        public Artist[] newArray(int size) {
-            return new Artist[size];
-        }
-    };
 }

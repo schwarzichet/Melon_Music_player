@@ -71,13 +71,13 @@ public class PlayerActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        this.isVisible = false;
+        isVisible = false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        this.isVisible = true;
+        isVisible = true;
     }
 
     @Override
@@ -365,10 +365,7 @@ public class PlayerActivity extends AppCompatActivity {
         Palette p = createPaletteSync(bitmap);
         Palette.Swatch vibrantSwatch = checkVibrantSwatch(p);
 
-        // Set the toolbar background and text colors
 
-//        progressBar.setBackgroundColor(vibrantSwatch.getRgb());
-//        title.setTitleTextColor(vibrantSwatch.getTitleTextColor());
         title.setTextColor(vibrantSwatch.getRgb());
         artist.setTextColor(vibrantSwatch.getRgb());
 
