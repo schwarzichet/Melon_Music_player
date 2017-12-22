@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.example.dfz.myapplication.MUtils.SongLoader;
 import com.example.dfz.myapplication.Model.Song;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 
@@ -70,29 +71,24 @@ public class AllSongsFragment extends Fragment {
         mSongAdapter.setOnItemClickListener(new MySongAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int pos) {
-                isPlaying = true;
-                Bundle bundle = new Bundle();
+//                isPlaying = true;
+//                Bundle bundle = new Bundle();
                 Song s = mSongs.get(pos);
-                bundle.putString("title", s.getTitle());
-                bundle.putString("artist", s.getArtist());
-                bundle.putInt("albumId", s.getAlbumID());
-                bundle.putLong("duration", s.getDuration());
+//                bundle.putString("title", s.getTitle());
+//                bundle.putString("artist", s.getArtist());
+//                bundle.putInt("albumId", s.getAlbumID());
+//                bundle.putLong("duration", s.getDuration());
+//
+//                LowerBar lowerBar = new LowerBar();
+//                lowerBar.setArguments(bundle);
+//                FragmentManager fragmentManager = getActivity().getFragmentManager();
+//                fragmentManager.beginTransaction().add(R.id., lowerBar).show(lowerBar).addToBackStack(null).commit();
 
-                LowerBar lowerBar = new LowerBar();
-                lowerBar.setArguments(bundle);
-                android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();
-                android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.add(R.id.lowerbar_layout, lowerBar).show(lowerBar).addToBackStack(null).commit();
-
-                if (mBound) {
-                    if(getActivity() instanceof OnItemClick) {
-                        Bundle bundle1 = new Bundle();
-                        int songId = s.get_Id();
-                        bundle1.putInt("songId", songId);
-                        ((OnItemClick) getActivity()).playThisSong(bundle1);
-                    }
-                } else {
-                    Toast.makeText(context, "no service!", Toast.LENGTH_SHORT).show();
+                if(getActivity() instanceof OnItemClick) {
+                    Bundle bundle1 = new Bundle();
+                    int songId = s.get_Id();
+                    bundle1.putInt("songId", songId);
+                    ((OnItemClick) getActivity()).playThisSong(bundle1);
                 }
             }
 
@@ -122,12 +118,12 @@ public class AllSongsFragment extends Fragment {
 //                    + " must implement OnFragmentInteractionListener");
 //        }
 //    }
-//
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+    }
 
     /**
      * This interface must be implemented by activities that contain this

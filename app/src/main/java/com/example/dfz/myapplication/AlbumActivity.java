@@ -1,33 +1,47 @@
 package com.example.dfz.myapplication;
 
+import android.app.FragmentTransaction;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.Display;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.view.View;
+
+import com.bumptech.glide.request.transition.Transition;
+import com.bumptech.glide.util.Util;
 import com.example.dfz.myapplication.MUtils.AlbumLoader;
-import com.example.dfz.myapplication.MUtils.SongLoader;
 import com.example.dfz.myapplication.Model.Album;
 import com.example.dfz.myapplication.Model.Song;
 import com.example.dfz.myapplication.Service.MusicService;
 
 import java.util.ArrayList;
+
+import jp.wasabeef.glide.transformations.BlurTransformation;
 
 import static android.widget.Toast.makeText;
 
@@ -45,14 +59,14 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
     private MusicService myService;
     boolean mBound = false;
 
-    android.app.FragmentManager fragmentManager;
-    android.app.FragmentTransaction fragmentTransaction;
-
-    public static boolean isVisible = true;
-
     public static final int MSG_NEXT_SONG = 1;
     private static Handler handler;
     public static Messenger messenger;
+
+    private ImageView albumCover;
+    private TextView albumName;
+    private TextView artist;
+    private TextView publicationYear;
 
     @Override
     protected void onStart() {
@@ -85,10 +99,52 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album_layout);
 
+        albumCover = findViewById(R.id.album_info_cover);
+        albumName = findViewById(R.id.album_info_name);
+        artist = findViewById(R.id.album_info_artist);
+        publicationYear = findViewById(R.id.album_info_publication_year);
+
         Intent intent = getIntent();
         int albumId = intent.getIntExtra("albumId", 0);
         album = AlbumLoader.getAlbum(this, albumId);
         songs = album.songs;
+        Uri imageUri = album.safeGetFirstSong().getAlbumArt();
+        Glide.with(this).load(imageUri).into(albumCover);
+        albumName.setText(album.getTitle());
+        artist.setText(album.getArtistName());
+        publicationYear.setText(album.getYear()+"");
+
+        View view = findViewById(R.id.album_page);
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+
+        Glide.with(this).load(imageUri).apply(RequestOptions.bitmapTransform(new BlurTransformation(this, 25)))
+                .into(new SimpleTarget<Drawable>(width, height) {
+            @Override
+            public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+                view.setBackground(resource);
+            }
+        });
+
+//        Glide.with(this).asBitmap().load(imageUri)
+//                .into(new SimpleTarget<Bitmap>(180,180) {
+//                    @Override
+//                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+//
+//                    }
+
+//                    {@literal @Override}
+//                    public void onResourceReady(Bitmap resource, GlideAnimation<Bitmap> glideAnimation) {
+//                        Drawable drawable = new BitmapDrawable(resource);
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//                            rlVenueBg.setBackground(drawable);
+//                        }
+//                    }
+//                });
 
         mRecyclerView = findViewById(R.id.songs_of_the_album);
         mRecyclerView.setHasFixedSize(true);
@@ -107,12 +163,9 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
 
                 LowerBar lowerBar = new LowerBar();
                 lowerBar.setArguments(bundle);
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentManager.popBackStack();
-                fragmentTransaction.replace(R.id.lowerbar_layout, lowerBar);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                getFragmentManager().popBackStack();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.lowerbar, lowerBar).addToBackStack(null).commit();
 
                 if (mBound) {
                     myService.playSong(s);
@@ -128,6 +181,8 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
 
         mRecyclerView.setAdapter(mAdapter);
     }
+
+
 
     public ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -192,12 +247,9 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
 
         LowerBar lowerBar = new LowerBar();
         lowerBar.setArguments(bundle);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentManager.popBackStack();
-        fragmentTransaction.replace(R.id.lowerbar_layout, lowerBar);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        getFragmentManager().popBackStack();
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.lowerbar, lowerBar).addToBackStack(null).commit();
     }
 
 }

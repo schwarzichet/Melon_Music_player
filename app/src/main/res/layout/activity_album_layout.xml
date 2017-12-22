@@ -1,26 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/album_page"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.dfz.myapplication.AlbumActivity">
-
-    <ScrollView
-
+    
+    <LinearLayout
+        android:id="@+id/album_information"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal"
+        android:padding="10dp">
 
-        <android.support.v7.widget.RecyclerView
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-            android:id="@+id/songs_of_the_album"
-            android:scrollbars="vertical"
+        <com.example.dfz.myapplication.Model.SquareImageView
+            android:id="@+id/album_info_cover"
+            android:layout_width="130dp"
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"/>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-    </ScrollView>
+            <TextView
+                android:id="@+id/album_info_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-</android.support.constraint.ConstraintLayout>
+            <TextView
+                android:id="@+id/album_info_artist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/album_info_publication_year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        android:id="@+id/songs_of_the_album"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/album_information"/>
+
+</RelativeLayout>
 
 

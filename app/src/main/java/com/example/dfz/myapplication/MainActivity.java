@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements AllSongsFragment.
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
-        setSupportActionBar(toolbar);
+//        setSupportActionBar(toolbar);
 
         mPlanetTitles = getResources().getStringArray(R.array.planets_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -368,12 +368,9 @@ public class MainActivity extends AppCompatActivity implements AllSongsFragment.
 
         LowerBar lowerBar = new LowerBar();
         lowerBar.setArguments(bundle);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentManager.popBackStack();
-        fragmentTransaction.replace(R.id.lowerbar_layout, lowerBar);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        getFragmentManager().popBackStack();
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.lowerbar, lowerBar).addToBackStack(null).commit();
     }
 
     @Override
@@ -405,7 +402,23 @@ public class MainActivity extends AppCompatActivity implements AllSongsFragment.
     public void playThisSong(Bundle bundle) {
         int songId = bundle.getInt("songId");
         Song song = SongLoader.getSong(this, songId);
-        myService.playSong(song);
+
+        Bundle bundle1 = new Bundle();
+        bundle1.putString("title", song.getTitle());
+        bundle1.putString("artist", song.getArtist());
+        bundle1.putInt("albumId", song.getAlbumID());
+        bundle1.putLong("duration", song.getDuration());
+
+        LowerBar lowerBar = new LowerBar();
+        lowerBar.setArguments(bundle1);
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.fragment_container, lowerBar).show(lowerBar).addToBackStack(null).commit();
+        if (mBound) {
+            myService.playSong(song);
+        } else {
+            Toast.makeText(this, "no service!", Toast.LENGTH_SHORT).show();
+        }
+        isPlaying = true;
     }
 
     private void updateDrawer(){

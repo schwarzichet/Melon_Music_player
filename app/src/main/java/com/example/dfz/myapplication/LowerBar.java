@@ -1,5 +1,6 @@
 package com.example.dfz.myapplication;
 
+import android.app.Fragment;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -7,7 +8,7 @@ import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.app.Fragment;
+//import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
