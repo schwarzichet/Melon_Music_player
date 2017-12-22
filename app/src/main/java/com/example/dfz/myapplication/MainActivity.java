@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements AllSongsFragment.
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
-//        setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
 
         mPlanetTitles = getResources().getStringArray(R.array.planets_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -370,7 +370,7 @@ public class MainActivity extends AppCompatActivity implements AllSongsFragment.
         lowerBar.setArguments(bundle);
         getFragmentManager().popBackStack();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.lowerbar, lowerBar).addToBackStack(null).commit();
+        fragmentTransaction.replace(R.id.fragment_container, lowerBar).addToBackStack(null).commit();
     }
 
     @Override

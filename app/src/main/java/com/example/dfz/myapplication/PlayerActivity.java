@@ -133,6 +133,11 @@ public class PlayerActivity extends AppCompatActivity {
         endTime.setText(durationString);
 
 //        updateColor(albumImageView.getDrawingCache());
+//        Glide.with(this)
+//                .load()
+//                .centerCrop()
+//                .into(yourView);
+//        Glide.with(this).load(imageUri).centerCrop().into();
         Glide.with(this).asBitmap().load(imageUri).into(new SimpleTarget<Bitmap>(200, 200) {
             @Override
             public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {

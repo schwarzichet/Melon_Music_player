@@ -61,7 +61,7 @@ public class SongLoader {
         Log.d(TAG, "getSong: ");
         return song;
     }
-    
+
 
     @NonNull
     private static Song getSongFromCursorImpl(@NonNull Cursor cursor) {

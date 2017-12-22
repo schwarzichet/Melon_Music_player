@@ -28,8 +28,7 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <include layout="@layout/fragment_content_slide" />
-
+        <include layout="@layout/activity_fragment_pager_support"/>
 
         <RelativeLayout
             android:id="@+id/lower_bar"
