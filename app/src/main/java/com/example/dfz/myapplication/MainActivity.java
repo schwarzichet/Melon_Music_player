@@ -102,13 +102,13 @@ public class MainActivity extends AppCompatActivity implements AllSongsFragment.
     @Override
     protected void onPause() {
         super.onPause();
-        this.isVisible = false;
+        isVisible = false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        this.isVisible = true;
+        isVisible = true;
         if (mBound) {
             Log.d(TAG, "onResume: yes bound");
             updateFragment();
@@ -391,7 +391,7 @@ public class MainActivity extends AppCompatActivity implements AllSongsFragment.
                 startActivity(new Intent(this, MainActivity.class));
                 break;
             case 1:
-                Intent intent = new Intent(MainActivity.this, LastFMActivity.class);
+                Intent intent = new Intent(MainActivity.this, LastFMLoginActivity.class);
                 startActivity(intent);
             default:
                 break;

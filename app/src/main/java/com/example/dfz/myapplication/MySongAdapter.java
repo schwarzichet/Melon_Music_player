@@ -38,6 +38,8 @@ public class MySongAdapter extends RecyclerView.Adapter<MySongAdapter.ViewHolder
     private Activity activity;
 
 
+
+
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
@@ -49,15 +51,10 @@ public class MySongAdapter extends RecyclerView.Adapter<MySongAdapter.ViewHolder
 
         public ViewHolder(CardView v) {
             super(v);
-            v.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG, "Element " + getAdapterPosition() + " clicked.");
-                }
-            });
-            mSongTitleTextView = v.findViewById(R.id.SongTitle);
-            mArtistTextView = v.findViewById(R.id.ArtistName);
-            mAlbumImageView = v.findViewById(R.id.albumImage);
+            v.setOnClickListener(v1 -> Log.d(TAG, "Element " + getAdapterPosition() + " clicked."));
+            mSongTitleTextView =  v.findViewById(R.id.SongTitle);
+            mArtistTextView =  v.findViewById(R.id.ArtistName);
+            mAlbumImageView =  v.findViewById(R.id.albumImage);
             //mMoreButton = (ImageButton)v.findViewById(R.id.buttonMore);
         }
     }
@@ -68,7 +65,7 @@ public class MySongAdapter extends RecyclerView.Adapter<MySongAdapter.ViewHolder
         this.activity = activity;
     }
 
-    // Create new views (invoked by the layout manager)
+    // Create new views (invoked by the rank_song_item manager)
     @Override
     public MySongAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                        int viewType) {
@@ -76,11 +73,12 @@ public class MySongAdapter extends RecyclerView.Adapter<MySongAdapter.ViewHolder
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.song_item_view, parent, false);
 
-        // set the view's size, margins, paddings and layout parameters
+
+        // set the view's size, margins, paddings and rank_song_item parameters
         return new ViewHolder((CardView) v);
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
+    // Replace the contents of a view (invoked by the rank_song_item manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         // - get element from your dataset at this position
@@ -88,17 +86,17 @@ public class MySongAdapter extends RecyclerView.Adapter<MySongAdapter.ViewHolder
         holder.mSongTitleTextView.setText(mDataset.get(position).getTitle());
         holder.mArtistTextView.setText(mDataset.get(position).getArtist());
 
+
         Uri imageUri = mDataset.get(position).getAlbumArt();
         Log.d(TAG, "onBindViewHolder: " + imageUri);
         Glide.with(activity).load(imageUri).into(holder.mAlbumImageView);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                if (onItemClickListener != null) {
-                    int pos = holder.getLayoutPosition();
-                    onItemClickListener.onItemClick(holder.itemView, pos);
-                }
+        holder.itemView.setOnClickListener(v -> {
+            if (onItemClickListener != null) {
+                int pos = holder.getLayoutPosition();
+
+                onItemClickListener.onItemClick(holder.itemView, pos);
+            }else {
             }
         });
 
@@ -122,7 +120,7 @@ public class MySongAdapter extends RecyclerView.Adapter<MySongAdapter.ViewHolder
     }
 
 
-    // Return the size of your dataset (invoked by the layout manager)
+    // Return the size of your dataset (invoked by the rank_song_item manager)
     @Override
     public int getItemCount() {
         return mDataset.size();

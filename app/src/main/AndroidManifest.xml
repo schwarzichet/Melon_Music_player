@@ -41,8 +41,12 @@
 
         <activity
             android:name=".FragmentPagerSupport"
-            android:theme="@style/AppTheme.transStatus"></activity>
-        <activity android:name=".AlbumActivity"></activity>
+            android:theme="@style/AppTheme.transStatus" />
+        <activity android:name=".AlbumActivity" />
+        <activity
+            android:name=".LastFMLoginActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".RankActivity"></activity>
     </application>
 
 </manifest>
