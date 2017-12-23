@@ -93,10 +93,10 @@ public class MainActivity extends AppCompatActivity implements AllSongsFragment.
         super.onStart();
         Intent intent2 = new Intent(this, MusicService.class);
         bindService(intent2, mConnection, Context.BIND_AUTO_CREATE);
-        Log.d(TAG, "onCreate: bind service");
+        Log.d(TAG, "onStart: bind service");
         handler = new MainHandler();
         messenger = new Messenger(handler);
-
+        Log.d(TAG, "onStart: " + mBound);
     }
 
     @Override
@@ -311,9 +311,10 @@ public class MainActivity extends AppCompatActivity implements AllSongsFragment.
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
             MusicService.MyBinder binder = (MusicService.MyBinder) service;
-            Log.d(TAG, "onServiceConnected: ");
             myService = binder.getService();
             mBound = true;
+            Log.d(TAG, "onServiceConnected: "+mBound);
+
         }
 
         @Override

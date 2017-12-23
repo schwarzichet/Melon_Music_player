@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 
 import com.example.dfz.myapplication.MUtils.AlbumLoader;
 import com.example.dfz.myapplication.Model.Album;
-import com.example.dfz.myapplication.Model.Song;
 
 import java.util.ArrayList;
 

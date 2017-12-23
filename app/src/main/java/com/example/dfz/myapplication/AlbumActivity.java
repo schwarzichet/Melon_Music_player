@@ -49,7 +49,7 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
     private RecyclerView mRecyclerView;
     private MySongAdapterWithoutImage mAdapter;
     private Album album;
-    private ArrayList<Song> songs = new ArrayList<Song>();
+    private ArrayList<Song> songs = new ArrayList<>();
 
     public static boolean isVisible = true;
 
@@ -90,31 +90,32 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
     protected void onStart() {
         super.onStart();
 
-//        while(!mBound) {
-//            Log.d("mbound", "no!!!");
+//
+
+//        if(mBound) {
+////            Log.d("mbound", "yes");
+//            Log.d(TAG, "onStart: yes bind service");
+//            if (myService.nowPlaySong() != null) {
+//                Log.d("show lowerbar", "show");
+//                Song nowSong = myService.nowPlaySong();
+//                Bundle bundle = new Bundle();
+//                bundle.putString("title", nowSong.getTitle());
+//                bundle.putString("artist", nowSong.getArtist());
+//                bundle.putInt("albumId", nowSong.getAlbumID());
+//                bundle.putLong("duration", nowSong.getDuration());
+//                bundle.putBoolean("isPause", myService.isPause);
+//
+//                LowerBar lowerBar = new LowerBar();
+//                lowerBar.setArguments(bundle);
+//                //getFragmentManager().popBackStack();
+//                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+//                fragmentTransaction.add(R.id.lowerbar_container, lowerBar).addToBackStack(null).commit();
+//
+//            }
+//        } else {
+////            Log.d("mbound", "no");
+//            Log.d(TAG, "onStart: no bind service:mBound: "+mBound);
 //        }
-        if(mBound) {
-            Log.d("mbound", "yes");
-            if (myService.nowPlaySong() != null) {
-                Log.d("show lowerbar", "show");
-                Song nowSong = myService.nowPlaySong();
-                Bundle bundle = new Bundle();
-                bundle.putString("title", nowSong.getTitle());
-                bundle.putString("artist", nowSong.getArtist());
-                bundle.putInt("albumId", nowSong.getAlbumID());
-                bundle.putLong("duration", nowSong.getDuration());
-                bundle.putBoolean("isPause", myService.isPause);
-
-                LowerBar lowerBar = new LowerBar();
-                lowerBar.setArguments(bundle);
-                //getFragmentManager().popBackStack();
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                fragmentTransaction.add(R.id.lowerbar_container, lowerBar).addToBackStack(null).commit();
-
-            }
-        } else {
-            Log.d("mbound", "no");
-        }
     }
 
     @Override
@@ -124,7 +125,7 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
 
         Intent intent = new Intent(this, MusicService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        Log.d(TAG, "onCreate: bind service");
+        Log.d(TAG, "onCreate: bind service : mBound"+mBound);
         handler = new AlbumActivityHandler();
         messenger = new Messenger(handler);
 
@@ -218,7 +219,14 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
 
         mRecyclerView.setAdapter(mAdapter);
 
-
+        Log.d(TAG, "onCreate: look bind end: mBound"+mBound);
+        if (!mBound){
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -261,13 +269,33 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
             MusicService.MyBinder binder = (MusicService.MyBinder) service;
-            Log.d(TAG, "onServiceConnected: ");
             myService = binder.getService();
             mBound = true;
+            Log.d(TAG, "onServiceConnected: mBound: "+mBound);
+
+            if (myService.nowPlaySong() != null) {
+                Log.d("show lowerbar", "show");
+                Song nowSong = myService.nowPlaySong();
+                Bundle bundle = new Bundle();
+                bundle.putString("title", nowSong.getTitle());
+                bundle.putString("artist", nowSong.getArtist());
+                bundle.putInt("albumId", nowSong.getAlbumID());
+                bundle.putLong("duration", nowSong.getDuration());
+                bundle.putBoolean("isPause", myService.isPause);
+
+                LowerBar lowerBar = new LowerBar();
+                lowerBar.setArguments(bundle);
+                //getFragmentManager().popBackStack();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.add(R.id.lowerbar_container, lowerBar).addToBackStack(null).commit();
+
+            }
+
         }
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
+            Log.d(TAG, "onServiceDisConnected: ");
             mBound = false;
         }
     };
