@@ -24,11 +24,8 @@ import java.util.List;
 public class FragmentPagerSupport extends FragmentActivity {
 
     static final int NUM_ITEMS = 4;
-    //MyAdapter mAdapter;
-    ViewPager mPager;
 
-//    android.app.FragmentManager fragmentManager;
-//    android.app.FragmentTransaction fragmentTransaction;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

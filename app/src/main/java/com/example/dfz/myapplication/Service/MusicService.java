@@ -18,6 +18,7 @@ import com.example.dfz.myapplication.AlbumActivity;
 import com.example.dfz.myapplication.MUtils.SongLoader;
 import com.example.dfz.myapplication.MainActivity;
 import com.example.dfz.myapplication.Model.Song;
+import com.example.dfz.myapplication.PlayListActivity;
 import com.example.dfz.myapplication.PlayerActivity;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -174,11 +175,14 @@ public class MusicService extends Service {
                             if(AlbumActivity.isVisible) {
                                 AlbumActivity.messenger.send(msgLowerBar);
                             }
+                            if (PlayListActivity.isVisible){
+                                AlbumActivity.messenger.send(msgLowerBar);
+                            }
                             if (PlayerActivity.isVisible) {
-                                Log.d(TAG, "onPlayerStateChanged: have PlayerAcitivity");
+                                Log.d(TAG, "onPlayerStateChanged: have PlayerActivity");
                                 PlayerActivity.messenger.send(msgPlayerActivity);
                             }else {
-                                Log.d(TAG, "onPlayerStateChanged: no PlayerAcitivity");
+                                Log.d(TAG, "onPlayerStateChanged: no PlayerActivity");
                             }
                         } catch (RemoteException e) {
                             e.printStackTrace();

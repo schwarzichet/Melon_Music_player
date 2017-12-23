@@ -17,7 +17,7 @@ import java.util.ArrayList;
  */
 
 public class SongLoader {
-    private static final String BASE_SELECTION = MediaStore.Audio.AudioColumns.IS_MUSIC + "=1" + " AND " + MediaStore.Audio.AudioColumns.TITLE + " != ''";
+    static final String BASE_SELECTION = MediaStore.Audio.AudioColumns.IS_MUSIC + "=1" + " AND " + MediaStore.Audio.AudioColumns.TITLE + " != ''";
     private static final String TAG = "SongLoader";
 
     @NonNull

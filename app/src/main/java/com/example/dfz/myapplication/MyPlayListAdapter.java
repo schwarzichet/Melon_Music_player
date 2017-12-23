@@ -14,11 +14,10 @@ import java.util.ArrayList;
 public class MyPlayListAdapter extends RecyclerView.Adapter<MyPlayListAdapter.ViewHolder> {
 
     private final ArrayList<PlayList> mPlayLists;
-//    private final OnListFragmentInteractionListener mListener;
+    private MyArtistAdapter.OnItemClickListener mListener;
 
-    public MyPlayListAdapter(ArrayList<PlayList> items) {
+    MyPlayListAdapter(ArrayList<PlayList> items) {
         mPlayLists = items;
-//        mListener = listener;
     }
 
     @Override
@@ -31,16 +30,11 @@ public class MyPlayListAdapter extends RecyclerView.Adapter<MyPlayListAdapter.Vi
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.playlistName.setText(mPlayLists.get(position).name);
-//        holder.mView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (null != mListener) {
-//                    // Notify the active callbacks interface (the activity, if the
-//                    // fragment is attached to one) that an item has been selected.
-//                    mListener.onListFragmentInteraction(holder.mItem);
-//                }
-//            }
-//        });
+        holder.mView.setOnClickListener(v -> {
+            if (null != mListener) {
+                mListener.onItemClick(holder.itemView, position);
+            }
+        });
     }
 
     @Override
@@ -62,5 +56,13 @@ public class MyPlayListAdapter extends RecyclerView.Adapter<MyPlayListAdapter.Vi
         public String toString() {
             return super.toString() + " '" + playlistName.getText() + "'";
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View itemView, int pos);
+    }
+
+    public void setOnItemClickListener(MyArtistAdapter.OnItemClickListener listener) {
+        this.mListener = listener;
     }
 }

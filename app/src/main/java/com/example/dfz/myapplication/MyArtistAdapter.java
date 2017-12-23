@@ -1,7 +1,6 @@
 package com.example.dfz.myapplication;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,17 +19,11 @@ public class MyArtistAdapter extends RecyclerView.Adapter<MyArtistAdapter.ViewHo
 
     private final ArrayList<Artist> artists;
     private Activity activity;
-    private Fragment fragment;
-//    private final OnListFragmentInteractionListener mListener;
     private MyArtistAdapter.OnItemClickListener onItemClickListener;
 
-    public MyArtistAdapter(ArrayList<Artist> items, Activity activity, Fragment fragment) {
+    MyArtistAdapter(ArrayList<Artist> items, Activity activity) {
         artists = items;
-
-
         this.activity = activity;
-        this.fragment = fragment;
-//        mListener = listener;
     }
 
     @Override
@@ -45,7 +38,7 @@ public class MyArtistAdapter extends RecyclerView.Adapter<MyArtistAdapter.ViewHo
         Artist artist = artists.get(position);
         holder.artistName.setText(artists.get(position).getName());
         holder.artistStat.setText(String.valueOf(artist.getAlbumCount()) + "albums-" + artist.getSongCount() + "songs ");
-        ArtistUtil.setArtistImage(activity, artists.get(position).getName(), artists.get(position).getId(),holder.artistImage, 2);
+        ArtistUtil.setArtistImage(activity, artists.get(position).getName(), artists.get(position).getId(), holder.artistImage, 2);
 
         holder.itemView.setOnClickListener(v -> {
             if (null != onItemClickListener) {
@@ -62,17 +55,15 @@ public class MyArtistAdapter extends RecyclerView.Adapter<MyArtistAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-//        final View mView;
         final TextView artistName;
         final TextView artistStat;
         final ImageView artistImage;
 
         ViewHolder(View view) {
             super(view);
-//            mView = view;
             artistName = view.findViewById(R.id.artist_name_artist_activity);
-            artistStat =  view.findViewById(R.id.artist_stat);
-            artistImage =  view.findViewById(R.id.artist_image_artist_activity);
+            artistStat = view.findViewById(R.id.artist_stat);
+            artistImage = view.findViewById(R.id.artist_image_artist_activity);
             setIsRecyclable(false);
         }
 

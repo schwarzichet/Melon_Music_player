@@ -1,6 +1,7 @@
 package com.example.dfz.myapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -26,7 +27,6 @@ public class PlayListFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
 //    private OnListFragmentInteractionListener mListener;
 
@@ -74,7 +74,15 @@ public class PlayListFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyPlayListAdapter(mPlayLists));
+
+            MyPlayListAdapter myPlayListAdapter = new MyPlayListAdapter(mPlayLists);
+            myPlayListAdapter.setOnItemClickListener((itemView, position)->{
+                PlayList p = mPlayLists.get(position);
+                Intent intent = new Intent(getActivity(), PlayListActivity.class);
+                intent.putExtra("playlist_id", p.id);
+                startActivity(intent);
+            });
+            recyclerView.setAdapter(myPlayListAdapter);
         }
         return view;
     }
@@ -109,6 +117,6 @@ public class PlayListFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(PlayList item);
+//        void onListFragmentInteraction(PlayList item);
     }
 }

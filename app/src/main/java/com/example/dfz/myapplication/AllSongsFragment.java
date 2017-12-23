@@ -23,16 +23,6 @@ public class AllSongsFragment extends Fragment {
 
     private ArrayList<Song> mSongs;
 
-    private MySongAdapter mSongAdapter;
-
-    private boolean isPlaying = false;
-
-//    private FragmentManager fragmentManager;
-//    private FragmentTransaction fragmentTransaction;
-
-    private boolean mBound = false;
-
-//    private OnFragmentInteractionListener mListener;
 
     public AllSongsFragment() {
         // Required empty public constructor
@@ -67,22 +57,12 @@ public class AllSongsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         mSongs = SongLoader.loadSongs(context);
-        mSongAdapter = new MySongAdapter(getActivity(), mSongs);
+        MySongAdapter mSongAdapter = new MySongAdapter(getActivity(), mSongs);
         mSongAdapter.setOnItemClickListener(new MySongAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int pos) {
-//                isPlaying = true;
-//                Bundle bundle = new Bundle();
+
                 Song s = mSongs.get(pos);
-//                bundle.putString("title", s.getTitle());
-//                bundle.putString("artist", s.getArtist());
-//                bundle.putInt("albumId", s.getAlbumID());
-//                bundle.putLong("duration", s.getDuration());
-//
-//                LowerBar lowerBar = new LowerBar();
-//                lowerBar.setArguments(bundle);
-//                FragmentManager fragmentManager = getActivity().getFragmentManager();
-//                fragmentManager.beginTransaction().add(R.id., lowerBar).show(lowerBar).addToBackStack(null).commit();
 
                 if(getActivity() instanceof OnItemClick) {
                     Bundle bundle1 = new Bundle();

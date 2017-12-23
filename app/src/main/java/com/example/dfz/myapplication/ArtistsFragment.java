@@ -28,7 +28,6 @@ public class ArtistsFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
@@ -75,7 +74,7 @@ public class ArtistsFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             mArtists = ArtistLoader.getAllArtists(getContext());
-            MyArtistAdapter myArtistAdapter = new MyArtistAdapter(mArtists, this.getActivity(), this);
+            MyArtistAdapter myArtistAdapter = new MyArtistAdapter(mArtists, this.getActivity());
             myArtistAdapter.setOnItemClickListener(((itemView, pos) -> {
                 Artist a = mArtists.get(pos);
                 Intent intent = new Intent(getActivity(), ArtistActivity.class);

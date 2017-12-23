@@ -32,7 +32,7 @@
                 android:parentActivityName=".MainActivity"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".Playlist" />
+        <activity android:name=".PlayListActivity" />
         <activity
             android:name=".LastFMActivity"
             android:parentActivityName=".MainActivity" />
@@ -43,13 +43,12 @@
             android:name=".FragmentPagerSupport"
             android:theme="@style/AppTheme.transStatus" />
         <activity
-            android:name=".AlbumActivity"
-            android:parentActivityName=".MainActivity" />
+            android:name=".AlbumActivity"/>
         <activity
             android:name=".LastFMLoginActivity"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".RankActivity" />
-        <activity android:name=".ArtistActivity"></activity>
+        <activity android:name=".ArtistActivity"/>
     </application>
 
 </manifest>

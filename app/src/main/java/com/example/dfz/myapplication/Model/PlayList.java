@@ -39,7 +39,7 @@ public class PlayList {
 
     @Override
     public String toString() {
-        return "Playlist{" +
+        return "PlayListActivity{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';

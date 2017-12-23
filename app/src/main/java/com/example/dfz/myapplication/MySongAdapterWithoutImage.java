@@ -82,7 +82,6 @@ public class MySongAdapterWithoutImage extends RecyclerView.Adapter<MySongAdapte
                 int pos = holder.getLayoutPosition();
 
                 onItemClickListener.onItemClick(holder.itemView, pos);
-            }else {
             }
         });
 

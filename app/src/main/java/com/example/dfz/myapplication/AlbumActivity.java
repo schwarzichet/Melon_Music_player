@@ -82,30 +82,6 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
     @Override
     protected void onStart() {
         super.onStart();
-//        if(mBound) {
-////            Log.d("mbound", "yes");
-//            Log.d(TAG, "onStart: yes bind service");
-//            if (myService.nowPlaySong() != null) {
-//                Log.d("show lowerbar", "show");
-//                Song nowSong = myService.nowPlaySong();
-//                Bundle bundle = new Bundle();
-//                bundle.putString("title", nowSong.getTitle());
-//                bundle.putString("artist", nowSong.getArtist());
-//                bundle.putInt("albumId", nowSong.getAlbumID());
-//                bundle.putLong("duration", nowSong.getDuration());
-//                bundle.putBoolean("isPause", myService.isPause);
-//
-//                LowerBar lowerBar = new LowerBar();
-//                lowerBar.setArguments(bundle);
-//                //getFragmentManager().popBackStack();
-//                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-//                fragmentTransaction.add(R.id.lowerbar_container, lowerBar).addToBackStack(null).commit();
-//
-//            }
-//        } else {
-////            Log.d("mbound", "no");
-//            Log.d(TAG, "onStart: no bind service:mBound: "+mBound);
-//        }
     }
 
     @Override
@@ -240,13 +216,6 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
         }else {
             Log.d(TAG, "onResume: oh, not bound?");
 
-//            Intent intent2 = new Intent(this, MusicService.class);
-//            bindService(intent2, mConnection, Context.BIND_AUTO_CREATE);
-//            Log.d(TAG, "onCreate: bind service");
-//            handler = new MainHandler();
-//            messenger = new Messenger(handler);
-
-//            updateFragment();
         }
     }
 
@@ -284,11 +253,8 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
                 //getFragmentManager().popBackStack();
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                 fragmentTransaction.add(R.id.lowerbar_container, lowerBar).addToBackStack(null).commit();
-
             }
-
         }
-
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
             Log.d(TAG, "onServiceDisConnected: ");
