@@ -51,7 +51,7 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
     private Album album;
     private ArrayList<Song> songs = new ArrayList<>();
 
-    public static boolean isVisible = true;
+    public static boolean isVisible = false;
 
     private long currentTimeMs = 0;
     private boolean isPlaying = false;

@@ -422,24 +422,21 @@ public class PlayerActivity extends AppCompatActivity {
 
                 int rgb = vibrantSwatch.getRgb();
 
-//                float[] hsv = new float[3];
-//                int color = Color.alpha(rgb);
-//                Color.colorToHSV(color, hsv);
-//                hsv[2] *= 0.8f; // value component
+
                 int color = ColorUtils.darken(rgb, 0.3);
                 View view = findViewById(R.id.player_layout);
-                view.setBackgroundColor(color);
+                view.setBackgroundColor(Color.WHITE);
 
-                progressBar.setDrawingCacheBackgroundColor(Color.WHITE);
-                title.setTextColor(Color.WHITE);
-                artist.setTextColor(Color.WHITE);
-                currentTime.setTextColor(Color.WHITE);
-                endTime.setTextColor(Color.WHITE);
-                controlBarPlay.setColorFilter(Color.WHITE);
-                previousSong.setColorFilter(Color.WHITE);
-                nextSong.setColorFilter(Color.WHITE);
-                switchMode.setColorFilter(Color.WHITE);
-                moreOperation.setColorFilter(Color.WHITE);
+                progressBar.setDrawingCacheBackgroundColor(rgb);
+                title.setTextColor(rgb);
+                artist.setTextColor(rgb);
+                currentTime.setTextColor(rgb);
+                endTime.setTextColor(rgb);
+                controlBarPlay.setColorFilter(rgb);
+                previousSong.setColorFilter(rgb);
+                nextSong.setColorFilter(rgb);
+                switchMode.setColorFilter(rgb);
+                moreOperation.setColorFilter(rgb);
             }
         });
     }

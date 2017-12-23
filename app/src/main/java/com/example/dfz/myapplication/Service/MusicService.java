@@ -339,7 +339,10 @@ public class MusicService extends Service {
         isNext = true;
         player.setPlayWhenReady(!playWhenReady);
         isNext = false;
-        player.setPlayWhenReady(playWhenReady);
+//        player.setPlayWhenReady(playWhenReady);
+        // fix to every time next it will play
+        player.setPlayWhenReady(true);
+        playWhenReady = true;
         Log.d(TAG, "playNext: " + nowSongIndex);
         playSong(s);
     }
