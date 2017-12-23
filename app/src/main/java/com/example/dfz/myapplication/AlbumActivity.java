@@ -89,9 +89,6 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
     @Override
     protected void onStart() {
         super.onStart();
-
-//
-
 //        if(mBound) {
 ////            Log.d("mbound", "yes");
 //            Log.d(TAG, "onStart: yes bind service");
@@ -261,6 +258,7 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
         if (mBound) {
             unbindService(mConnection);
         }
+        mBound = false;
         handler.removeCallbacksAndMessages(null);
     }
 

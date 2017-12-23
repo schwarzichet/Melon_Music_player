@@ -3,7 +3,6 @@ package com.example.dfz.myapplication;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,10 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.dfz.myapplication.MUtils.ArtistLoader;
-import com.example.dfz.myapplication.Model.Artist;
+import com.example.dfz.myapplication.MUtils.PlayListLoader;
+import com.example.dfz.myapplication.Model.PlayList;
 
 import java.util.ArrayList;
+
 
 /**
  * A fragment representing a list of Items.
@@ -22,27 +22,28 @@ import java.util.ArrayList;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class ArtistsFragment extends Fragment {
+public class PlayListFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
+//    private OnListFragmentInteractionListener mListener;
 
-    private ArrayList<Artist> mArtists;
+    private ArrayList<PlayList> mPlayLists;
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ArtistsFragment() {
+    public PlayListFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static ArtistsFragment newInstance(int columnCount) {
-        ArtistsFragment fragment = new ArtistsFragment();
+    public static PlayListFragment newInstance(int columnCount) {
+        PlayListFragment fragment = new PlayListFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -61,8 +62,9 @@ public class ArtistsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_artist_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_playlist_list, container, false);
 
+        mPlayLists = PlayListLoader.getAllPlayLists(getContext());
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
@@ -72,9 +74,7 @@ public class ArtistsFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            mArtists = ArtistLoader.getAllArtists(getContext());
-            MyArtistAdapter myArtistAdapter = new MyArtistAdapter(mArtists, this.getActivity(), this);
-            recyclerView.setAdapter(myArtistAdapter);
+            recyclerView.setAdapter(new MyPlayListAdapter(mPlayLists));
         }
         return view;
     }
@@ -94,7 +94,7 @@ public class ArtistsFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+//        mListener = null;
     }
 
     /**
@@ -109,6 +109,6 @@ public class ArtistsFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-//        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(PlayList item);
     }
 }

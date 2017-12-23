@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements AllSongsFragment.
                     newPage = new ArtistsFragment();
                     break;
                 case 3:
-                    newPage = new PlaylistsFragment();
+                    newPage = new PlayListFragment();
                     break;
                 default:
                     newPage = new AllSongsFragment();
