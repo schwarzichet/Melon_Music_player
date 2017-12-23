@@ -89,28 +89,28 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
     @Override
     protected void onStart() {
         super.onStart();
-        Intent intent = new Intent(this, MusicService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        Log.d(TAG, "onCreate: bind service");
-        handler = new AlbumActivityHandler();
-        messenger = new Messenger(handler);
 
-        if(myService.nowPlaySong()!=null) {
-            Log.d("show lowerbar", "show");
-            Song nowSong = myService.nowPlaySong();
-            Bundle bundle = new Bundle();
-            bundle.putString("title", nowSong.getTitle());
-            bundle.putString("artist", nowSong.getArtist());
-            bundle.putInt("albumId", nowSong.getAlbumID());
-            bundle.putLong("duration", nowSong.getDuration());
-            bundle.putBoolean("isPause", myService.isPause);
+        if(mBound) {
+            Log.d("mbound", "yes");
+            if (myService.nowPlaySong() != null) {
+                Log.d("show lowerbar", "show");
+                Song nowSong = myService.nowPlaySong();
+                Bundle bundle = new Bundle();
+                bundle.putString("title", nowSong.getTitle());
+                bundle.putString("artist", nowSong.getArtist());
+                bundle.putInt("albumId", nowSong.getAlbumID());
+                bundle.putLong("duration", nowSong.getDuration());
+                bundle.putBoolean("isPause", myService.isPause);
 
-            LowerBar lowerBar = new LowerBar();
-            lowerBar.setArguments(bundle);
-            //getFragmentManager().popBackStack();
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.add(R.id.album_page, lowerBar).addToBackStack(null).commit();
+                LowerBar lowerBar = new LowerBar();
+                lowerBar.setArguments(bundle);
+                //getFragmentManager().popBackStack();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.add(R.id.album_page, lowerBar).addToBackStack(null).commit();
 
+            }
+        } else {
+            Log.d("mbound", "no");
         }
     }
 
@@ -135,13 +135,19 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album_layout);
 
+        Intent intent = new Intent(this, MusicService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        Log.d(TAG, "onCreate: bind service");
+        handler = new AlbumActivityHandler();
+        messenger = new Messenger(handler);
+
         albumCover = findViewById(R.id.album_info_cover);
         albumName = findViewById(R.id.album_info_name);
         artist = findViewById(R.id.album_info_artist);
         publicationYear = findViewById(R.id.album_info_publication_year);
 
-        Intent intent = getIntent();
-        int albumId = intent.getIntExtra("albumId", 0);
+        Intent intent1 = getIntent();
+        int albumId = intent1.getIntExtra("albumId", 0);
         album = AlbumLoader.getAlbum(this, albumId);
         songs = album.songs;
         Uri imageUri = album.safeGetFirstSong().getAlbumArt();
