@@ -14,6 +14,7 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.dfz.myapplication.AlbumActivity;
 import com.example.dfz.myapplication.MUtils.SongLoader;
 import com.example.dfz.myapplication.MainActivity;
 import com.example.dfz.myapplication.Model.Song;
@@ -67,6 +68,9 @@ public class MusicService extends Service {
     private boolean isNext = false;
     private boolean isPrevious = false;
 
+    public boolean showLowerBar = false;
+
+    public boolean isPause = false;
 
     @Override
     public void onDestroy() {
@@ -166,6 +170,9 @@ public class MusicService extends Service {
                         try {
                             if (MainActivity.isVisible) {
                                 MainActivity.messenger.send(msgLowerBar);
+                            }
+                            if(AlbumActivity.isVisible) {
+                                AlbumActivity.messenger.send(msgLowerBar);
                             }
                             if (PlayerActivity.isVisible) {
                                 Log.d(TAG, "onPlayerStateChanged: have PlayerAcitivity");
@@ -279,6 +286,7 @@ public class MusicService extends Service {
 
     public void start() {
         if (player != null) {
+            isPause = false;
             player.setPlayWhenReady(true);
             if (!this.playWhenReady) {
                 this.playWhenReady = true;
@@ -288,6 +296,7 @@ public class MusicService extends Service {
 
     public void pause() {
         if (player != null) {
+            isPause = true;
             player.setPlayWhenReady(false);
             if (this.playWhenReady) {
                 this.playWhenReady = false;
@@ -302,7 +311,8 @@ public class MusicService extends Service {
     }
 
     public void playSong(Song s) {
-
+        showLowerBar = true;
+        Log.d("show", "TRUE");
         int index = songs.indexOf(s);
         if (index != -1) {
             nowSongIndex = index;

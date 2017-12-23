@@ -38,6 +38,9 @@ public class LowerBar extends Fragment {
     private long currentMs=0;
     private boolean isPlaying = false;
 
+    ImageButton playOrPause;
+    ImageButton nextSong;
+
     private GestureDetectorCompat mDetector;
 
     @Override
@@ -46,7 +49,7 @@ public class LowerBar extends Fragment {
         title = getArguments().getString("title");
         artist = getArguments().getString("artist");
         albumId = getArguments().getInt("albumId");
-        isPlaying = true;
+        isPlaying = !getArguments().getBoolean("isPause");
     }
 
     @Override
@@ -62,7 +65,12 @@ public class LowerBar extends Fragment {
         artist_view.setText(artist);
         title_view.setText(title);
 
-        final ImageButton playOrPause = lowerbar.findViewById(R.id.lowerbar_playbutton);
+        playOrPause = lowerbar.findViewById(R.id.lowerbar_playbutton);
+        if(isPlaying)
+            playOrPause.setImageResource(R.drawable.ic_pause);
+        else
+            playOrPause.setImageResource(R.drawable.ic_play_arrow);
+
         playOrPause.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -79,7 +87,7 @@ public class LowerBar extends Fragment {
             }
         });
 
-        final ImageButton nextSong = lowerbar.findViewById(R.id.lowerbar_nextbutton);
+        nextSong = lowerbar.findViewById(R.id.lowerbar_nextbutton);
         nextSong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,6 +116,10 @@ public class LowerBar extends Fragment {
                 return false;
             }
         });
+    }
+
+    public void setIconPlayArrow() {
+        playOrPause.setImageResource(R.drawable.ic_play_arrow);
     }
 
 

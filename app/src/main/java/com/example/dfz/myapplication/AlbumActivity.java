@@ -51,6 +51,8 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
     private Album album;
     private ArrayList<Song> songs = new ArrayList<Song>();
 
+    public static boolean isVisible = true;
+
     private long currentTimeMs = 0;
     private boolean isPlaying = false;
 
@@ -68,14 +70,48 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
     private TextView artist;
     private TextView publicationYear;
 
+    private class AlbumHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            if (AlbumActivity.this.isDestroyed()) {
+                return;
+            }
+            switch (msg.what) {
+                case MSG_NEXT_SONG:
+                    updateFragment();
+                    break;
+                default:
+                    super.handleMessage(msg);
+            }
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
-        Intent intent2 = new Intent(this, MusicService.class);
-        bindService(intent2, mConnection, Context.BIND_AUTO_CREATE);
+        Intent intent = new Intent(this, MusicService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         Log.d(TAG, "onCreate: bind service");
         handler = new AlbumActivityHandler();
         messenger = new Messenger(handler);
+
+        if(myService.nowPlaySong()!=null) {
+            Log.d("show lowerbar", "show");
+            Song nowSong = myService.nowPlaySong();
+            Bundle bundle = new Bundle();
+            bundle.putString("title", nowSong.getTitle());
+            bundle.putString("artist", nowSong.getArtist());
+            bundle.putInt("albumId", nowSong.getAlbumID());
+            bundle.putLong("duration", nowSong.getDuration());
+            bundle.putBoolean("isPause", myService.isPause);
+
+            LowerBar lowerBar = new LowerBar();
+            lowerBar.setArguments(bundle);
+            //getFragmentManager().popBackStack();
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.add(R.id.album_page, lowerBar).addToBackStack(null).commit();
+
+        }
     }
 
     private class AlbumActivityHandler extends Handler {
@@ -160,12 +196,20 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
                 bundle.putString("artist", s.getArtist());
                 bundle.putInt("albumId", s.getAlbumID());
                 bundle.putLong("duration", s.getDuration());
+                bundle.putBoolean("isPause", !isPlaying);
 
                 LowerBar lowerBar = new LowerBar();
                 lowerBar.setArguments(bundle);
-                getFragmentManager().popBackStack();
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.lowerbar, lowerBar).addToBackStack(null).commit();
+                //getFragmentManager().popBackStack();
+                if(getFragmentManager().getBackStackEntryCount()>0) {
+                    getFragmentManager().popBackStack();
+                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.album_page, lowerBar).addToBackStack(null).commit();
+                }
+                else {
+                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                    fragmentTransaction.add(R.id.album_page, lowerBar).addToBackStack(null).commit();
+                }
 
                 if (mBound) {
                     myService.playSong(s);
@@ -180,9 +224,44 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
         });
 
         mRecyclerView.setAdapter(mAdapter);
+
+
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isVisible = false;
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isVisible = true;
+        if (mBound) {
+            Log.d(TAG, "onResume: yes bound");
+            updateFragment();
+        }else {
+            Log.d(TAG, "onResume: oh, not bound?");
+
+//            Intent intent2 = new Intent(this, MusicService.class);
+//            bindService(intent2, mConnection, Context.BIND_AUTO_CREATE);
+//            Log.d(TAG, "onCreate: bind service");
+//            handler = new MainHandler();
+//            messenger = new Messenger(handler);
+
+//            updateFragment();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mBound) {
+            unbindService(mConnection);
+        }
+        handler.removeCallbacksAndMessages(null);
+    }
 
     public ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -244,12 +323,13 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
         bundle.putString("artist", s.getArtist());
         bundle.putInt("albumId", s.getAlbumID());
         bundle.putLong("duration", s.getDuration());
+        bundle.putBoolean("isPause", false);
 
         LowerBar lowerBar = new LowerBar();
         lowerBar.setArguments(bundle);
         getFragmentManager().popBackStack();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.lowerbar, lowerBar).addToBackStack(null).commit();
+        fragmentTransaction.replace(R.id.album_page, lowerBar).addToBackStack(null).commit();
     }
 
 }

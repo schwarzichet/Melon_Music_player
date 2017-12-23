@@ -219,7 +219,6 @@ public class MainActivity extends AppCompatActivity implements AllSongsFragment.
             switch(position){
                 case 0:
                     newPage = new AllSongsFragment();
-                    Log.d("all songs", "show");
                     break;
                 case 1:
                     newPage = new AlbumsFragment();
@@ -365,6 +364,7 @@ public class MainActivity extends AppCompatActivity implements AllSongsFragment.
         bundle.putString("artist", s.getArtist());
         bundle.putInt("albumId", s.getAlbumID());
         bundle.putLong("duration", s.getDuration());
+        bundle.putBoolean("isPause", false);
 
         LowerBar lowerBar = new LowerBar();
         lowerBar.setArguments(bundle);
@@ -408,11 +408,20 @@ public class MainActivity extends AppCompatActivity implements AllSongsFragment.
         bundle1.putString("artist", song.getArtist());
         bundle1.putInt("albumId", song.getAlbumID());
         bundle1.putLong("duration", song.getDuration());
+        bundle1.putBoolean("isPause", false);
 
         LowerBar lowerBar = new LowerBar();
         lowerBar.setArguments(bundle1);
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.fragment_container, lowerBar).show(lowerBar).addToBackStack(null).commit();
+        if(getFragmentManager().getBackStackEntryCount()>0) {
+            getFragmentManager().popBackStack();
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, lowerBar).addToBackStack(null).commit();
+        }
+        else {
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.add(R.id.fragment_container, lowerBar).show(lowerBar).addToBackStack(null).commit();
+        }
+
         if (mBound) {
             myService.playSong(song);
         } else {
