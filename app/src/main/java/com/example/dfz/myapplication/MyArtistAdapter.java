@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.dfz.myapplication.MUtils.ArtistUtil;
 import com.example.dfz.myapplication.Model.Artist;
 
@@ -46,9 +45,10 @@ public class MyArtistAdapter extends RecyclerView.Adapter<MyArtistAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        Artist artist = artists.get(position);
         holder.artistName.setText(artists.get(position).getName());
 //        holder.mIdView.setText(artists.get(position).id);
-        holder.artistStat.setText(artists.get(position).getAlbumCount()+"albums-"+artists.get(position).getSongCount()+" songs");
+        holder.artistStat.setText(String.valueOf(artist.getAlbumCount()) + "albums-" + artist.getSongCount() + " songs "+artist.getId());
 //        holder.artistImage.setTag(position);
         ArtistUtil.setArtistImage(activity, fragment, artists.get(position).getName(),holder.artistImage, position);
 

@@ -64,7 +64,8 @@ public class ArtistLoader {
 
     private static Artist getOrCreateArtist(ArrayList<Artist> artists, int artistId) {
         for (Artist artist : artists) {
-            if (!artist.albums.isEmpty() && !artist.albums.get(0).songs.isEmpty() && artist.albums.get(0).songs.get(0).get_Id() == artistId) {
+
+            if (!artist.albums.isEmpty() && !artist.albums.get(0).songs.isEmpty() && artist.albums.get(0).songs.get(0).getArtistID() == artistId) {
                 return artist;
             }
         }
