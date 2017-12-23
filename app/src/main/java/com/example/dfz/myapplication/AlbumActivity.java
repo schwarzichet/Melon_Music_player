@@ -120,6 +120,10 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album_layout);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Album");
+        }
+
         Intent intent = new Intent(this, MusicService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         Log.d(TAG, "onCreate: bind service : mBound"+mBound);
@@ -139,7 +143,7 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
         Glide.with(this).load(imageUri).into(albumCover);
         albumName.setText(album.getTitle());
         artist.setText(album.getArtistName());
-        publicationYear.setText(album.getYear()+"");
+        publicationYear.setText(String.valueOf(album.getYear()));
 
         View view = findViewById(R.id.album_page);
 

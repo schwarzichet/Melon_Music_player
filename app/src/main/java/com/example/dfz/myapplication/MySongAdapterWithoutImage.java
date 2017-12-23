@@ -37,12 +37,14 @@ public class MySongAdapterWithoutImage extends RecyclerView.Adapter<MySongAdapte
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mSongTitleTextView;
         private ImageButton mMoreButton;
+        private TextView trackNumber;
 
         public ViewHolder(CardView v) {
             super(v);
             v.setOnClickListener(v1 -> Log.d(TAG, "Element " + getAdapterPosition() + " clicked."));
             mSongTitleTextView =  v.findViewById(R.id.song_title_in_album);
             mMoreButton =  v.findViewById(R.id.button_more_in_album);
+            trackNumber = v.findViewById(R.id.track_number);
             //mAlbumImageView =  v.findViewById(R.id.albumImage);
             //mMoreButton = (ImageButton)v.findViewById(R.id.buttonMore);
         }
@@ -72,7 +74,8 @@ public class MySongAdapterWithoutImage extends RecyclerView.Adapter<MySongAdapte
     public void onBindViewHolder(final MySongAdapterWithoutImage.ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.mSongTitleTextView.setText("· "+mDataset.get(position).getTitle());
+        holder.trackNumber.setText(String.valueOf(mDataset.get(position).getTrackNumber()));
+        holder.mSongTitleTextView.setText(mDataset.get(position).getTitle());
 
         holder.itemView.setOnClickListener(v -> {
             if (onItemClickListener != null) {
@@ -83,15 +86,12 @@ public class MySongAdapterWithoutImage extends RecyclerView.Adapter<MySongAdapte
             }
         });
 
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (onItemClickListener != null) {
-                    int pos = holder.getLayoutPosition();
-                    onItemClickListener.onItemLongClick(holder.itemView, pos);
-                }
-                return true;
+        holder.itemView.setOnLongClickListener(v -> {
+            if (onItemClickListener != null) {
+                int pos = holder.getLayoutPosition();
+                onItemClickListener.onItemLongClick(holder.itemView, pos);
             }
+            return true;
         });
 
 //        holder.mMoreButton.setOnClickListener(new View.OnClickListener() {
