@@ -5,18 +5,15 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Bitmap;
 import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Display;
@@ -28,18 +25,14 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.view.View;
-
 import com.bumptech.glide.request.transition.Transition;
-import com.bumptech.glide.util.Util;
 import com.example.dfz.myapplication.MUtils.AlbumLoader;
 import com.example.dfz.myapplication.Model.Album;
 import com.example.dfz.myapplication.Model.Song;
 import com.example.dfz.myapplication.Service.MusicService;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
@@ -139,6 +132,7 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
         int albumId = intent1.getIntExtra("albumId", 0);
         album = AlbumLoader.getAlbum(this, albumId);
         songs = album.songs;
+        Collections.sort(songs, (song1, song2) -> song1.getTrackNumber()-song2.getTrackNumber());
         Uri imageUri = album.safeGetFirstSong().getAlbumArt();
         Glide.with(this).load(imageUri).into(albumCover);
         albumName.setText(album.getTitle());
