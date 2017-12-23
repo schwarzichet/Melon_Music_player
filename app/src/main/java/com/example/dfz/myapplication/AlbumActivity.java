@@ -353,4 +353,10 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
         fragmentTransaction.replace(R.id.lowerbar_container, lowerBar).addToBackStack(null).commit();
     }
 
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
 }
