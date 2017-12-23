@@ -47,7 +47,7 @@ import static android.widget.Toast.makeText;
 
 public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBarFragmentTouchListener, LowerBar.LowerBarPlayButtonClickListener, LowerBar.LowerBarNextButtonClickListener{
     private RecyclerView mRecyclerView;
-    private MySongAdapter mAdapter;
+    private MySongAdapterWithoutImage mAdapter;
     private Album album;
     private ArrayList<Song> songs = new ArrayList<Song>();
 
@@ -70,10 +70,10 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
     private TextView artist;
     private TextView publicationYear;
 
-    private class AlbumHandler extends Handler {
+    private class AlbumActivityHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
-            if (AlbumActivity.this.isDestroyed()) {
+            if (isDestroyed()) {
                 return;
             }
             switch (msg.what) {
@@ -90,6 +90,9 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
     protected void onStart() {
         super.onStart();
 
+//        while(!mBound) {
+//            Log.d("mbound", "no!!!");
+//        }
         if(mBound) {
             Log.d("mbound", "yes");
             if (myService.nowPlaySong() != null) {
@@ -106,27 +109,11 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
                 lowerBar.setArguments(bundle);
                 //getFragmentManager().popBackStack();
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                fragmentTransaction.add(R.id.album_page, lowerBar).addToBackStack(null).commit();
+                fragmentTransaction.add(R.id.lowerbar_container, lowerBar).addToBackStack(null).commit();
 
             }
         } else {
             Log.d("mbound", "no");
-        }
-    }
-
-    private class AlbumActivityHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            if (isDestroyed()) {
-                return;
-            }
-            switch (msg.what) {
-                case MSG_NEXT_SONG:
-                    updateFragment();
-                    break;
-                default:
-                    super.handleMessage(msg);
-            }
         }
     }
 
@@ -191,8 +178,8 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
         mRecyclerView = findViewById(R.id.songs_of_the_album);
         mRecyclerView.setHasFixedSize(true);
 
-        mAdapter = new MySongAdapter(this, songs);
-        mAdapter.setOnItemClickListener(new MySongAdapter.OnItemClickListener() {
+        mAdapter = new MySongAdapterWithoutImage(this, songs);
+        mAdapter.setOnItemClickListener(new MySongAdapterWithoutImage.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 isPlaying = true;
@@ -210,11 +197,11 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
                 if(getFragmentManager().getBackStackEntryCount()>0) {
                     getFragmentManager().popBackStack();
                     FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(R.id.album_page, lowerBar).addToBackStack(null).commit();
+                    fragmentTransaction.replace(R.id.lowerbar_container, lowerBar).addToBackStack(null).commit();
                 }
                 else {
                     FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                    fragmentTransaction.add(R.id.album_page, lowerBar).addToBackStack(null).commit();
+                    fragmentTransaction.add(R.id.lowerbar_container, lowerBar).addToBackStack(null).commit();
                 }
 
                 if (mBound) {
@@ -335,7 +322,7 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
         lowerBar.setArguments(bundle);
         getFragmentManager().popBackStack();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.album_page, lowerBar).addToBackStack(null).commit();
+        fragmentTransaction.replace(R.id.lowerbar_container, lowerBar).addToBackStack(null).commit();
     }
 
 }
