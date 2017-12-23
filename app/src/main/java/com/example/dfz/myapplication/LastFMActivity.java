@@ -118,6 +118,12 @@ public class LastFMActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        Intent intent = new Intent(LastFMActivity.this, MainActivity.class);
+        startActivity(intent);
+    }
 
     private class MyRecentAdapter extends RecyclerView.Adapter<MyRecentAdapter.ViewHolder> {
         private ArrayList<SimpleSong> mSimpleSongs;

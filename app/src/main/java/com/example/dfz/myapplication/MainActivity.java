@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,6 +34,7 @@ import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.bumptech.glide.Glide;
+import com.example.dfz.myapplication.MUtils.LastFMUtil;
 import com.example.dfz.myapplication.MUtils.SongLoader;
 import com.example.dfz.myapplication.MUtils.SongUtil;
 import com.example.dfz.myapplication.Model.Song;
@@ -100,6 +102,11 @@ public class MainActivity extends AppCompatActivity implements AllSongsFragment.
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         isVisible = false;
@@ -128,11 +135,18 @@ public class MainActivity extends AppCompatActivity implements AllSongsFragment.
     @Override
     protected void onStop() {
         super.onStop();
-        if (mBound) {
-            unbindService(mConnection);
-        }
+//        if (mBound) {
+//            unbindService(mConnection);
+//            Log.d(TAG, "onStop: unbind");
+//
+//
+//        }
         handler.removeCallbacksAndMessages(null);
     }
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -302,6 +316,7 @@ public class MainActivity extends AppCompatActivity implements AllSongsFragment.
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         Intent destroyIntent = new Intent(this, MusicService.class);
         stopService(destroyIntent);
     }
@@ -314,6 +329,7 @@ public class MainActivity extends AppCompatActivity implements AllSongsFragment.
             myService = binder.getService();
             mBound = true;
             Log.d(TAG, "onServiceConnected: "+mBound);
+            updateFragment();
 
         }
 
@@ -392,8 +408,15 @@ public class MainActivity extends AppCompatActivity implements AllSongsFragment.
                 startActivity(new Intent(this, MainActivity.class));
                 break;
             case 1:
-                Intent intent = new Intent(MainActivity.this, LastFMLoginActivity.class);
-                startActivity(intent);
+                SharedPreferences pref = getSharedPreferences(LastFMLoginActivity.PREFS_NAME, 0);
+                if (pref.getAll().containsKey("username")&& LastFMUtil.isLogin){
+                    Intent intent = new Intent(MainActivity.this, LastFMActivity.class);
+                    startActivity(intent);
+                }else {
+                    Intent intent = new Intent(MainActivity.this, LastFMLoginActivity.class);
+                    startActivity(intent);
+                }
+
             default:
                 break;
         }

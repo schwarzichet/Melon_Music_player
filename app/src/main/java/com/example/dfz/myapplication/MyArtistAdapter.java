@@ -19,17 +19,13 @@ import java.util.ArrayList;
 public class MyArtistAdapter extends RecyclerView.Adapter<MyArtistAdapter.ViewHolder> {
 
     private final ArrayList<Artist> artists;
-    private final ArrayList<Boolean> checked;
     private Activity activity;
     private Fragment fragment;
 //    private final OnListFragmentInteractionListener mListener;
 
     public MyArtistAdapter(ArrayList<Artist> items, Activity activity, Fragment fragment) {
         artists = items;
-        checked = new ArrayList<>();
-        for (Artist ignored : artists){
-            checked.add(false);
-        }
+
 
         this.activity = activity;
         this.fragment = fragment;
@@ -47,7 +43,7 @@ public class MyArtistAdapter extends RecyclerView.Adapter<MyArtistAdapter.ViewHo
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Artist artist = artists.get(position);
         holder.artistName.setText(artists.get(position).getName());
-        holder.artistStat.setText(String.valueOf(artist.getAlbumCount()) + "albums-" + artist.getSongCount() + " songs "+artist.getId());
+        holder.artistStat.setText(String.valueOf(artist.getAlbumCount()) + "albums-" + artist.getSongCount() + "songs ");
         ArtistUtil.setArtistImage(activity, fragment, artists.get(position).getName(),holder.artistImage, position);
 
 //        holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -60,7 +56,6 @@ public class MyArtistAdapter extends RecyclerView.Adapter<MyArtistAdapter.ViewHo
 //                }
 //            }
 //        });
-        checked.set(position, true);
     }
 
     @Override

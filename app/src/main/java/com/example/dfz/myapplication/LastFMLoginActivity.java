@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.dfz.myapplication.MUtils.LastFMUtil;
+import com.example.dfz.myapplication.Service.MusicService;
 import com.vpaliy.last_fm_api.auth.LastFmAuth;
 import com.vpaliy.last_fm_api.model.Response;
 import com.vpaliy.last_fm_api.model.Session;
@@ -199,6 +200,7 @@ public class LastFMLoginActivity extends AppCompatActivity {
                 return false;
             }
 
+            LastFMUtil.isLogin=returnValue[0];
             return returnValue[0];
 
         }
