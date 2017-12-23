@@ -22,6 +22,7 @@ public class MyArtistAdapter extends RecyclerView.Adapter<MyArtistAdapter.ViewHo
     private Activity activity;
     private Fragment fragment;
 //    private final OnListFragmentInteractionListener mListener;
+    private MyArtistAdapter.OnItemClickListener onItemClickListener;
 
     public MyArtistAdapter(ArrayList<Artist> items, Activity activity, Fragment fragment) {
         artists = items;
@@ -44,18 +45,15 @@ public class MyArtistAdapter extends RecyclerView.Adapter<MyArtistAdapter.ViewHo
         Artist artist = artists.get(position);
         holder.artistName.setText(artists.get(position).getName());
         holder.artistStat.setText(String.valueOf(artist.getAlbumCount()) + "albums-" + artist.getSongCount() + "songs ");
-        ArtistUtil.setArtistImage(activity, fragment, artists.get(position).getName(),holder.artistImage, position);
+        ArtistUtil.setArtistImage(activity, artists.get(position).getName(), artists.get(position).getId(),holder.artistImage, 2);
 
-//        holder.mView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (null != mListener) {
-//                    // Notify the active callbacks interface (the activity, if the
-//                    // fragment is attached to one) that an item has been selected.
-//                    mListener.onListFragmentInteraction(holder.mItem);
-//                }
-//            }
-//        });
+        holder.itemView.setOnClickListener(v -> {
+            if (null != onItemClickListener) {
+                // Notify the active callbacks interface (the activity, if the
+                // fragment is attached to one) that an item has been selected.
+                onItemClickListener.onItemClick(holder.itemView, position);
+            }
+        });
     }
 
     @Override
@@ -72,9 +70,9 @@ public class MyArtistAdapter extends RecyclerView.Adapter<MyArtistAdapter.ViewHo
         ViewHolder(View view) {
             super(view);
 //            mView = view;
-            artistName = view.findViewById(R.id.artist_name);
+            artistName = view.findViewById(R.id.artist_name_artist_activity);
             artistStat =  view.findViewById(R.id.artist_stat);
-            artistImage =  view.findViewById(R.id.artist_image);
+            artistImage =  view.findViewById(R.id.artist_image_artist_activity);
             setIsRecyclable(false);
         }
 
@@ -82,5 +80,13 @@ public class MyArtistAdapter extends RecyclerView.Adapter<MyArtistAdapter.ViewHo
         public String toString() {
             return super.toString() + " '" + artistStat.getText() + "'";
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View itemView, int pos);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.onItemClickListener = listener;
     }
 }

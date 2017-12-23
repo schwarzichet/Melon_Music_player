@@ -1,12 +1,14 @@
 package com.example.dfz.myapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,6 +76,12 @@ public class ArtistsFragment extends Fragment {
             }
             mArtists = ArtistLoader.getAllArtists(getContext());
             MyArtistAdapter myArtistAdapter = new MyArtistAdapter(mArtists, this.getActivity(), this);
+            myArtistAdapter.setOnItemClickListener(((itemView, pos) -> {
+                Artist a = mArtists.get(pos);
+                Intent intent = new Intent(getActivity(), ArtistActivity.class);
+                intent.putExtra("artist_id", a.getId());
+                startActivity(intent);
+            }));
             recyclerView.setAdapter(myArtistAdapter);
         }
         return view;

@@ -61,13 +61,10 @@ public class MyAlbumAdapter extends RecyclerView.Adapter<MyAlbumAdapter.ViewHold
         Uri imageUri = mAlbums.get(position).safeGetFirstSong().getAlbumArt();
         Glide.with(activity).load(imageUri).into(holder.mAlbumArt);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (onItemClickListener != null) {
-                    int pos = holder.getLayoutPosition();
-                    onItemClickListener.onItemClick(holder.itemView, pos);
-                }
+        holder.itemView.setOnClickListener(view -> {
+            if (onItemClickListener != null) {
+                int pos = holder.getLayoutPosition();
+                onItemClickListener.onItemClick(holder.itemView, pos);
             }
         });
     }
@@ -103,5 +100,6 @@ public class MyAlbumAdapter extends RecyclerView.Adapter<MyAlbumAdapter.ViewHold
     public void setOnItemClickListener(MyAlbumAdapter.OnItemClickListener listener) {
         this.onItemClickListener = listener;
     }
+
 
 }

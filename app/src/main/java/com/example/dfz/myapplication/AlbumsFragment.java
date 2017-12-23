@@ -69,22 +69,15 @@ public class AlbumsFragment extends Fragment {
 
         mAlbums = AlbumLoader.getAllAlbums(getContext());
         MyAlbumAdapter mAlbumAdapter = new MyAlbumAdapter(getActivity(), mAlbums);
-        mAlbumAdapter.setOnItemClickListener(new MyAlbumAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View itemView, int pos) {
-//                Bundle bundle = new Bundle();
-//                bundle.putInt("position", pos);
-                Album album = mAlbums.get(pos);
-//                bundle.putString("title", album.getTitle());
-//                bundle.putString("artistName", album.getArtistName());
-//                bundle.putInt("albumYear", album.getYear());
-//                bundle.putLong("songCount", album.getSongCount());
-                Log.d("go to", "success!");
-                Intent intent = new Intent(getActivity(), AlbumActivity.class);
-                intent.putExtra("albumId", album.getId());
-                Log.d("go to album activity", "success!");
-                startActivity(intent);
-            }
+        mAlbumAdapter.setOnItemClickListener((itemView, pos) -> {
+
+            Album album = mAlbums.get(pos);
+
+            Log.d("go to", "success!");
+            Intent intent = new Intent(getActivity(), AlbumActivity.class);
+            intent.putExtra("albumId", album.getId());
+            Log.d("go to album activity", "success!");
+            startActivity(intent);
         });
         recyclerView.setAdapter(mAlbumAdapter);
         return view;
