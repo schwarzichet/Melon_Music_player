@@ -213,7 +213,7 @@ public class ArtistActivity extends AppCompatActivity implements LowerBar.LowerB
         lowerBar.setArguments(bundle);
         getFragmentManager().popBackStack();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.lowerbar_container, lowerBar).addToBackStack(null).commit();
+        fragmentTransaction.replace(R.id.container_in_artist_activity, lowerBar).addToBackStack(null).commit();
     }
 
 

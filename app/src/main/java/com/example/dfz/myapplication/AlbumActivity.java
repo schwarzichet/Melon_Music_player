@@ -247,7 +247,7 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
                 lowerBar.setArguments(bundle);
                 //getFragmentManager().popBackStack();
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                fragmentTransaction.add(R.id.container_in_artist_activity, lowerBar).addToBackStack(null).commit();
+                fragmentTransaction.add(R.id.lowerbar_container, lowerBar).addToBackStack(null).commit();
             }
         }
         @Override
@@ -307,7 +307,7 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
         lowerBar.setArguments(bundle);
         getFragmentManager().popBackStack();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.container_in_artist_activity, lowerBar).addToBackStack(null).commit();
+        fragmentTransaction.replace(R.id.lowerbar_container, lowerBar).addToBackStack(null).commit();
     }
 
 

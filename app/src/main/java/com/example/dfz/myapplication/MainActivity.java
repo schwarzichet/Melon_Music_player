@@ -436,15 +436,15 @@ public class MainActivity extends AppCompatActivity implements AllSongsFragment.
 
         LowerBar lowerBar = new LowerBar();
         lowerBar.setArguments(bundle1);
-        if(getFragmentManager().getBackStackEntryCount()>0) {
-            getFragmentManager().popBackStack();
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, lowerBar).addToBackStack(null).commit();
-        }
-        else {
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.add(R.id.fragment_container, lowerBar).show(lowerBar).addToBackStack(null).commit();
-        }
+//        if(getFragmentManager().getBackStackEntryCount()>0) {
+//            getFragmentManager().popBackStack();
+//            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+//            fragmentTransaction.replace(R.id.fragment_container, lowerBar).addToBackStack(null).commit();
+//        }
+//        else {
+//            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+//            fragmentTransaction.add(R.id.fragment_container, lowerBar).show(lowerBar).addToBackStack(null).commit();
+//        }
 
         if (mBound) {
             myService.playSong(song);
