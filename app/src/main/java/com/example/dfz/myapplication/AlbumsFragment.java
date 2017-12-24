@@ -73,7 +73,6 @@ public class AlbumsFragment extends Fragment {
 
             Album album = mAlbums.get(pos);
 
-            Log.d("go to", "success!");
             Intent intent = new Intent(getActivity(), AlbumActivity.class);
             intent.putExtra("albumId", album.getId());
             Log.d("go to album activity", "success!");

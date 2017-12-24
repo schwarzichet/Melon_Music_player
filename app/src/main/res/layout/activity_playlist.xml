@@ -56,7 +56,7 @@
         app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
     <FrameLayout
-        android:id="@+id/lowerbar_container"
+        android:id="@+id/container_in_playlist_activity"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

@@ -110,11 +110,11 @@ public class PlayListActivity extends AppCompatActivity implements LowerBar.Lowe
                     if(getFragmentManager().getBackStackEntryCount()>0) {
                         getFragmentManager().popBackStack();
                         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                        fragmentTransaction.replace(R.id.lowerbar_container, lowerBar).addToBackStack(null).commit();
+                        fragmentTransaction.replace(R.id.container_in_playlist_activity, lowerBar).addToBackStack(null).commit();
                     }
                     else {
                         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                        fragmentTransaction.add(R.id.lowerbar_container, lowerBar).addToBackStack(null).commit();
+                        fragmentTransaction.add(R.id.container_in_playlist_activity, lowerBar).addToBackStack(null).commit();
                     }
 
                     if (mBound) {
@@ -198,7 +198,7 @@ public class PlayListActivity extends AppCompatActivity implements LowerBar.Lowe
                 LowerBar lowerBar = new LowerBar();
                 lowerBar.setArguments(bundle);
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                fragmentTransaction.add(R.id.lowerbar_container, lowerBar).addToBackStack(null).commit();
+                fragmentTransaction.add(R.id.container_in_playlist_activity, lowerBar).addToBackStack(null).commit();
             }
         }
 
@@ -258,7 +258,7 @@ public class PlayListActivity extends AppCompatActivity implements LowerBar.Lowe
         lowerBar.setArguments(bundle);
         getFragmentManager().popBackStack();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.lowerbar_container, lowerBar).addToBackStack(null).commit();
+        fragmentTransaction.replace(R.id.container_in_playlist_activity, lowerBar).addToBackStack(null).commit();
     }
 
     @Override

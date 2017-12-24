@@ -7,22 +7,22 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$/../ExoPlayer/extensions/ffmpeg" />
-            <option value="$PROJECT_DIR$/../ExoPlayer/extensions/flac" />
-            <option value="$PROJECT_DIR$/../ExoPlayer/extensions/gvr" />
-            <option value="$PROJECT_DIR$/../ExoPlayer/extensions/ima" />
-            <option value="$PROJECT_DIR$/../ExoPlayer/extensions/mediasession" />
-            <option value="$PROJECT_DIR$/../ExoPlayer/extensions/okhttp" />
-            <option value="$PROJECT_DIR$/../ExoPlayer/extensions/opus" />
-            <option value="$PROJECT_DIR$/../ExoPlayer/extensions/rtmp" />
-            <option value="$PROJECT_DIR$/../ExoPlayer/extensions/vp9" />
-            <option value="$PROJECT_DIR$/../ExoPlayer/library/all" />
-            <option value="$PROJECT_DIR$/../ExoPlayer/library/core" />
-            <option value="$PROJECT_DIR$/../ExoPlayer/library/dash" />
-            <option value="$PROJECT_DIR$/../ExoPlayer/library/hls" />
-            <option value="$PROJECT_DIR$/../ExoPlayer/library/smoothstreaming" />
-            <option value="$PROJECT_DIR$/../ExoPlayer/library/ui" />
-            <option value="$PROJECT_DIR$/../ExoPlayer/testutils" />
+            <option value="D:/exoplayer/extensions/ffmpeg" />
+            <option value="D:/exoplayer/extensions/flac" />
+            <option value="D:/exoplayer/extensions/gvr" />
+            <option value="D:/exoplayer/extensions/ima" />
+            <option value="D:/exoplayer/extensions/mediasession" />
+            <option value="D:/exoplayer/extensions/okhttp" />
+            <option value="D:/exoplayer/extensions/opus" />
+            <option value="D:/exoplayer/extensions/rtmp" />
+            <option value="D:/exoplayer/extensions/vp9" />
+            <option value="D:/exoplayer/library/all" />
+            <option value="D:/exoplayer/library/core" />
+            <option value="D:/exoplayer/library/dash" />
+            <option value="D:/exoplayer/library/hls" />
+            <option value="D:/exoplayer/library/smoothstreaming" />
+            <option value="D:/exoplayer/library/ui" />
+            <option value="D:/exoplayer/testutils" />
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
           </set>

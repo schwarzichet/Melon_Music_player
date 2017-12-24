@@ -15,6 +15,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.dfz.myapplication.AlbumActivity;
+import com.example.dfz.myapplication.ArtistActivity;
 import com.example.dfz.myapplication.MUtils.SongLoader;
 import com.example.dfz.myapplication.MainActivity;
 import com.example.dfz.myapplication.Model.Song;
@@ -174,6 +175,9 @@ public class MusicService extends Service {
                             }
                             if(AlbumActivity.isVisible) {
                                 AlbumActivity.messenger.send(msgLowerBar);
+                            }
+                            if(ArtistActivity.isVisible) {
+                                ArtistActivity.messenger.send(msgLowerBar);
                             }
                             if (PlayListActivity.isVisible){
                                 AlbumActivity.messenger.send(msgLowerBar);
