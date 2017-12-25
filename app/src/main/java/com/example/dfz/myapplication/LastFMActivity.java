@@ -103,6 +103,7 @@ public class LastFMActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(response -> {
                     TrackPage trackPage = response.result;
+                    Log.d(TAG, "onCreate: "+trackPage );
 
                     for (Track t : trackPage.track) {
                         mSimpleSongs.add(new SimpleSong(t.name, t.artist.name, t.album.name, t.playcount));
