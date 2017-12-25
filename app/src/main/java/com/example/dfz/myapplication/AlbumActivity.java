@@ -259,16 +259,19 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
 
     @Override
     public void goToPlayer(Bundle bundle) {
-        Song s = myService.nowPlaySong();
-        currentTimeMs = bundle.getLong("currentMs");
-        Intent intent = new Intent(this, PlayerActivity.class);
-        intent.putExtra("albumId", s.getAlbumID());
-        intent.putExtra("title", s.getTitle());
-        intent.putExtra("artist", s.getArtist());
-        intent.putExtra("duration", s.getDuration());
-        intent.putExtra("currentTimeMs", currentTimeMs);
-        intent.putExtra("isPlaying", isPlaying);
-        startActivity(intent);
+        if (myService!=null){
+            Song s = myService.nowPlaySong();
+            currentTimeMs = bundle.getLong("currentMs");
+            Intent intent = new Intent(this, PlayerActivity.class);
+            intent.putExtra("albumId", s.getAlbumID());
+            intent.putExtra("title", s.getTitle());
+            intent.putExtra("artist", s.getArtist());
+            intent.putExtra("duration", s.getDuration());
+            intent.putExtra("currentTimeMs", currentTimeMs);
+            intent.putExtra("isPlaying", isPlaying);
+            startActivity(intent);
+        }
+
     }
 
     @Override

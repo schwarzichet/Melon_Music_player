@@ -31,7 +31,7 @@ import java.util.Collections;
 
 import static android.widget.Toast.makeText;
 
-public class PlayListActivity extends AppCompatActivity implements LowerBar.LowerBarFragmentTouchListener, LowerBar.LowerBarPlayButtonClickListener, LowerBar.LowerBarNextButtonClickListener  {
+public class PlayListActivity extends AppCompatActivity implements LowerBar.LowerBarFragmentTouchListener, LowerBar.LowerBarPlayButtonClickListener, LowerBar.LowerBarNextButtonClickListener {
 
     private static final String TAG = "PlayListActivity";
 
@@ -83,9 +83,8 @@ public class PlayListActivity extends AppCompatActivity implements LowerBar.Lowe
             }
             TextView playListStat = findViewById(R.id.playlist_stat);
             TimeFormat tf = new TimeFormat(duration);
-            playListStat.setText(songNum+" songs - "+ tf.toTimeFormat());
-            Collections.sort(playListSongs, (song1, song2) -> song1.idInPlayList-song2.idInPlayList);
-
+            playListStat.setText(songNum + " songs - " + tf.toTimeFormat());
+            Collections.sort(playListSongs, (song1, song2) -> song1.idInPlayList - song2.idInPlayList);
 
 
             RecyclerView mRecyclerView = findViewById(R.id.playlist_activity_list);
@@ -107,12 +106,11 @@ public class PlayListActivity extends AppCompatActivity implements LowerBar.Lowe
                     LowerBar lowerBar = new LowerBar();
                     lowerBar.setArguments(bundle);
                     //getFragmentManager().popBackStack();
-                    if(getFragmentManager().getBackStackEntryCount()>0) {
+                    if (getFragmentManager().getBackStackEntryCount() > 0) {
                         getFragmentManager().popBackStack();
                         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                         fragmentTransaction.replace(R.id.container_in_playlist_activity, lowerBar).addToBackStack(null).commit();
-                    }
-                    else {
+                    } else {
                         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                         fragmentTransaction.add(R.id.container_in_playlist_activity, lowerBar).addToBackStack(null).commit();
                     }
@@ -210,16 +208,19 @@ public class PlayListActivity extends AppCompatActivity implements LowerBar.Lowe
 
     @Override
     public void goToPlayer(Bundle bundle) {
-        Song s = myService.nowPlaySong();
-        long currentTimeMs = bundle.getLong("currentMs");
-        Intent intent = new Intent(this, PlayerActivity.class);
-        intent.putExtra("albumId", s.getAlbumID());
-        intent.putExtra("title", s.getTitle());
-        intent.putExtra("artist", s.getArtist());
-        intent.putExtra("duration", s.getDuration());
-        intent.putExtra("currentTimeMs", currentTimeMs);
-        intent.putExtra("isPlaying", isPlaying);
-        startActivity(intent);
+        if (myService != null) {
+            Song s = myService.nowPlaySong();
+            long currentTimeMs = bundle.getLong("currentMs");
+            Intent intent = new Intent(this, PlayerActivity.class);
+            intent.putExtra("albumId", s.getAlbumID());
+            intent.putExtra("title", s.getTitle());
+            intent.putExtra("artist", s.getArtist());
+            intent.putExtra("duration", s.getDuration());
+            intent.putExtra("currentTimeMs", currentTimeMs);
+            intent.putExtra("isPlaying", isPlaying);
+            startActivity(intent);
+        }
+
     }
 
     @Override
