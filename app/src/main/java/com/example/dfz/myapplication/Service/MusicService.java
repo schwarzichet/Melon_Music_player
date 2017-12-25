@@ -77,7 +77,7 @@ public class MusicService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Toast.makeText(this, "service destroy", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "service destroy", Toast.LENGTH_SHORT).show();
         Log.d(TAG, "onDestroy: service destroy");
         releasePlayer();
         timer.cancel();
@@ -113,7 +113,7 @@ public class MusicService extends Service {
 
         startForeground(1, n);
 
-        Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
         Log.d(TAG, "onHandleIntent: I am handle intent ");
 
 //        songUri = intent.getStringExtra("songUri");
@@ -159,9 +159,9 @@ public class MusicService extends Service {
                         Song song = songs.get(nowSongIndex);
                         durationMs = song.getDuration();
                         if (isPrevious){
-                            Toast.makeText(getBaseContext(), "previous song", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getBaseContext(), "previous song", Toast.LENGTH_SHORT).show();
                         }else {
-                            Toast.makeText(getBaseContext(), "next song", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getBaseContext(), "next song", Toast.LENGTH_SHORT).show();
 
                         }
 
@@ -180,7 +180,7 @@ public class MusicService extends Service {
                                 ArtistActivity.messenger.send(msgLowerBar);
                             }
                             if (PlayListActivity.isVisible){
-                                AlbumActivity.messenger.send(msgLowerBar);
+                                PlayListActivity.messenger.send(msgLowerBar);
                             }
                             if (PlayerActivity.isVisible) {
                                 Log.d(TAG, "onPlayerStateChanged: have PlayerActivity");
@@ -351,6 +351,7 @@ public class MusicService extends Service {
         // fix to every time next it will play
         player.setPlayWhenReady(true);
         playWhenReady = true;
+
         Log.d(TAG, "playNext: " + nowSongIndex);
         playSong(s);
     }
@@ -385,5 +386,9 @@ public class MusicService extends Service {
 
     }
 
+
+    public boolean isPlaying(){
+        return playWhenReady;
+    }
 
 }

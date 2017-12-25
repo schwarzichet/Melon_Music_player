@@ -295,13 +295,13 @@ public class AlbumActivity extends AppCompatActivity implements LowerBar.LowerBa
     private void updateFragment() {
         Song s = myService.nowPlaySong();
         makeText(getBaseContext(), "now Song is" + s, Toast.LENGTH_SHORT).show();
-
+        isPlaying = myService.isPlaying();
         Bundle bundle = new Bundle();
         bundle.putString("title", s.getTitle());
         bundle.putString("artist", s.getArtist());
         bundle.putInt("albumId", s.getAlbumID());
         bundle.putLong("duration", s.getDuration());
-        bundle.putBoolean("isPause", false);
+        bundle.putBoolean("isPause", !myService.isPlaying());
 
         LowerBar lowerBar = new LowerBar();
         lowerBar.setArguments(bundle);

@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements AllSongsFragment.
     private static Handler handler;
     public static Messenger messenger;
 
+    private int updatetime = 0;
+
 
     private String[] mPlanetTitles;
     private DrawerLayout mDrawerLayout;
@@ -99,6 +101,9 @@ public class MainActivity extends AppCompatActivity implements AllSongsFragment.
         handler = new MainHandler();
         messenger = new Messenger(handler);
         Log.d(TAG, "onStart: " + mBound);
+        if (updatetime==1){
+
+        }
     }
 
     @Override
@@ -329,7 +334,7 @@ public class MainActivity extends AppCompatActivity implements AllSongsFragment.
             myService = binder.getService();
             mBound = true;
             Log.d(TAG, "onServiceConnected: "+mBound);
-            updateFragment();
+//            updateFragment();
 
         }
 
@@ -372,16 +377,17 @@ public class MainActivity extends AppCompatActivity implements AllSongsFragment.
     }
 
     private void updateFragment() {
-
+        updatetime+=1;
         Song s = myService.nowPlaySong();
-        Toast.makeText(getBaseContext(), "now Song is" + s, Toast.LENGTH_SHORT).show();
-
+//        Toast.makeText(getBaseContext(), "now Song is" + s, Toast.LENGTH_SHORT).show();
+        isPlaying = myService.isPlaying();
+        Log.d(TAG, "updateFragment: isPlaying"+isPlaying);
         Bundle bundle = new Bundle();
         bundle.putString("title", s.getTitle());
         bundle.putString("artist", s.getArtist());
         bundle.putInt("albumId", s.getAlbumID());
         bundle.putLong("duration", s.getDuration());
-        bundle.putBoolean("isPause", false);
+        bundle.putBoolean("isPause", !myService.isPlaying());
 
         LowerBar lowerBar = new LowerBar();
         lowerBar.setArguments(bundle);
@@ -436,15 +442,15 @@ public class MainActivity extends AppCompatActivity implements AllSongsFragment.
 
         LowerBar lowerBar = new LowerBar();
         lowerBar.setArguments(bundle1);
-//        if(getFragmentManager().getBackStackEntryCount()>0) {
-//            getFragmentManager().popBackStack();
-//            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-//            fragmentTransaction.replace(R.id.fragment_container, lowerBar).addToBackStack(null).commit();
-//        }
-//        else {
-//            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-//            fragmentTransaction.add(R.id.fragment_container, lowerBar).show(lowerBar).addToBackStack(null).commit();
-//        }
+        if(getFragmentManager().getBackStackEntryCount()>0) {
+            getFragmentManager().popBackStack();
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, lowerBar).addToBackStack(null).commit();
+        }
+        else {
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.add(R.id.fragment_container, lowerBar).show(lowerBar).addToBackStack(null).commit();
+        }
 
         if (mBound) {
             myService.playSong(song);

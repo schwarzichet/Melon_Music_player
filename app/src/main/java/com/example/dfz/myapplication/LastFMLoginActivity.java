@@ -180,11 +180,11 @@ public class LastFMLoginActivity extends AppCompatActivity {
                     .observeOn(AndroidSchedulers.mainThread()).onErrorReturnItem(error)
                     .subscribe(response -> {
                         if (response.error == 1) {
-                            Toast.makeText(LastFMLoginActivity.this, "log in fail", Toast.LENGTH_LONG).show();
+//                            Toast.makeText(LastFMLoginActivity.this, "log in fail", Toast.LENGTH_LONG).show();
                             returnValue[0] = false;
                         } else {
                             Session session = response.result;
-                            Toast.makeText(LastFMLoginActivity.this, "" + session, Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(LastFMLoginActivity.this, "" + session, Toast.LENGTH_SHORT).show();
                             SharedPreferences.Editor editor = pref.edit();
                             editor.putString("key", Session.convertToString(session)).apply();
                             editor.putString("username", mUsername).apply();
