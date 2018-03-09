@@ -1,2 +1,2 @@
-# Melon_Music_player
+# MoonBlast
 A Material Design Music Player with Last.fm service embedded.
